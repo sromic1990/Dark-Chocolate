@@ -1,0 +1,112 @@
+# Visual Studio specific
+.vs/
+*.vcxproj.user
+*.vcxproj.filters
+*.suo
+*.ncb
+*.sdf
+*.pdb
+*.opendb
+*.VC.db
+*.code-workspace
+
+# Build outputs
+Build/
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ARM64/
+*.obj
+*.lib
+*.dll
+*.exp
+*.idb
+*.ipch
+*.ilk
+*.iobj
+*.ipdb
+*.pdb
+*.rsp
+*.tlb
+*.tli
+*.tlh
+*.pch
+*.log
+*.tlog/
+*.lastbuildstate
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+Makefile
+CMakeScripts/
+cmake_install.cmake
+
+# DirectX Shader Compiler output
+*.cso
+*.hlsl.old
+*.fxc_output
+*.fx
+*.dxbc
+*.dxil
+
+# GLFW build artifacts
+glfw/build/
+glfw/bin/
+glfw/*.dll
+glfw/*.lib
+glfw/*.exp
+glfw/*.ilk
+glfw/*.pdb
+glfw/*.idb
+
+# Vulkan Specific (SPIR-V binaries and shader artifacts)
+*.spv        # Compiled Vulkan shader binary files
+*.vert.spv   # Vertex shader compiled
+*.frag.spv   # Fragment shader compiled
+*.comp.spv   # Compute shader compiled
+*.geom.spv   # Geometry shader compiled
+*.tesc.spv   # Tessellation control shader compiled
+*.tese.spv   # Tessellation evaluation shader compiled
+*.rgen.spv   # Ray generation shader compiled
+*.rmiss.spv  # Ray miss shader compiled
+*.rchit.spv  # Ray hit shader compiled
+*.shaderc    # Temporary Vulkan shader compilation output
+*.spirv      # Alternative SPIR-V output extension
+
+# Vulkan Validation Layer Cache
+VK_LAYER_PATH
+VK_ICD_FILENAMES
+
+# Vulkan Loader and Debug Report Files
+vulkaninfo.txt
+VkLayer*.log
+vulkan*.log
+
+# Editor & IDE specific
+*.sln.cache
+*.sln.docstates
+*.VC.opendb
+*.VC.db
+.idea/
+*.userprefs
+
+# Auto-generated files
+*.generated.*
+*.gen.*
+*.bak
+*.tmp
+*.cache
+*.dmp
+
+# Logs and debugging
+*.log
+*.trace
+
+# Package manager files
+*.nuget/
+packages/
+__pycache__/
+node_modules/
