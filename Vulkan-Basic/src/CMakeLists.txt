@@ -31,7 +31,7 @@ endif()
 # CREATE EXECUTABLE
 file(GLOB_RECURSE SUBDIRECTORIES "${CMAKE_SOURCE_DIR}/src/*.h" "${CMAKE_SOURCE_DIR}/src/*.cpp")
 source_group("src" "${CMAKE_SOURCE_DIR}/src" ${SUBDIRECTORIES})
-add_executable(Vulkan-Basic main.cpp)
+add_executable(Vulkan-Basic main.cpp "DrawTriangle.cpp")
 target_include_directories(Vulkan-Basic PRIVATE ${Vulkan_INCLUDE_DIRS})
 target_link_libraries(Vulkan-Basic PRIVATE ${Vulkan_LIBRARIES})
 
