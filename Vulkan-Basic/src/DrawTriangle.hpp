@@ -19,6 +19,9 @@ private:
 
 	void setupDebugMessenger();
 
+	void pickPhysicalDevice();
+	void createLogicalDevice();
+
 	std::vector<const char*> getRequiredExtension() const;
 
 	friend static bool checkValidationLayerSupport();
@@ -37,4 +40,7 @@ private:
 
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
+	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkDevice device;
+	VkQueue graphicsQueue;
 };
