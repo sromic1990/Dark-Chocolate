@@ -22,6 +22,7 @@ private:
 	void createSurface();
 	void pickPhysicalDevice();
 	void createLogicalDevice();
+	void createSwapChain();
 
 	std::vector<const char*> getRequiredExtension() const;
 
@@ -47,4 +48,8 @@ private:
 	VkQueue graphicsQueue;
 	VkSurfaceKHR surface;
 	VkQueue presentQueue;
+	VkSwapchainKHR swapChain;
+	std::vector<VkImage> swapChainImages;
+	VkFormat swapChainImageFormat;
+	VkExtent2D swapChainExtent;
 };
