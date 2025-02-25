@@ -24,6 +24,7 @@ private:
 	void createLogicalDevice();
 	void createSwapChain();
 	void createImageViews();
+	void createGraphicsPipeline();
 
 	std::vector<const char*> getRequiredExtension() const;
 

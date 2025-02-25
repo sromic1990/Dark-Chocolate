@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <ShaderUtils.hpp>
+#include <filesystem>
 
 
 static bool areAllExtensionsSupported(const std::vector<const char*>&, const std::vector<VkExtensionProperties>&);
@@ -71,6 +73,7 @@ void DrawTriangle::initVulkan()
 	createLogicalDevice();
 	createSwapChain();
 	createImageViews();
+	createGraphicsPipeline();
 }
 
 void DrawTriangle::createSurface()
@@ -240,6 +243,22 @@ void DrawTriangle::createImageViews()
 			throw std::runtime_error("failed to create image views!");
 		}
 	}
+}
+
+void DrawTriangle::createGraphicsPipeline()
+{
+	auto vertShaderCode = readFile("shaders/shader.vert.spv");
+	auto fragShaderCode = readFile("shaders/shader.vert.spv");
+
+	// Print out the sizes from our vectors
+	std::cout << "Shader vert.spv size in memory: " << vertShaderCode.size() << " bytes\n";
+	std::cout << "Shader frag.spv size in memory: " << fragShaderCode.size() << " bytes\n";
+
+	// Compare against file size on disk
+	auto vertFileSize = std::filesystem::file_size("shaders/shader.vert.spv");
+	auto fragFileSize = std::filesystem::file_size("shaders/shader.frag.spv");
+	std::cout << "Shader vert.spv size on disk:   " << vertFileSize << " bytes\n";
+	std::cout << "Shader frag.spv size on disk:   " << fragFileSize << " bytes\n";
 }
 
 void DrawTriangle::setupDebugMessenger()
