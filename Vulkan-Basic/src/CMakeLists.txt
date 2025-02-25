@@ -79,8 +79,9 @@ foreach(SHADER_FILE ${SHADER_SOURCES})
     get_filename_component(FILE_EXT ${SHADER_FILE} EXT) # e.g. ".vert"
 
     # PUTTING THE COMPILED .spv FILES IN THE BUILD DIRECTORY UNDER /shaders/
+    STRING(REGEX REPLACE "^\\." "" FILE_EXT_CLEAN "${FILE_EXT}")
     set(SPIRV_FILE
-        "${CMAKE_BINARY_DIR}/shaders/${FILE_NAME_WE}${FILE_EXT}.spv"
+        "${CMAKE_BINARY_DIR}/shaders/${FILE_EXT_CLEAN}.spv"
     )
 
     add_custom_command(

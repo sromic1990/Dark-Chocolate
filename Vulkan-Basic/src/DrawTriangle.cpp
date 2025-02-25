@@ -247,16 +247,16 @@ void DrawTriangle::createImageViews()
 
 void DrawTriangle::createGraphicsPipeline()
 {
-	auto vertShaderCode = readFile("shaders/shader.vert.spv");
-	auto fragShaderCode = readFile("shaders/shader.vert.spv");
+	auto vertShaderCode = readFile("shaders/vert.spv");
+	auto fragShaderCode = readFile("shaders/frag.spv");
 
 	// Print out the sizes from our vectors
 	std::cout << "Shader vert.spv size in memory: " << vertShaderCode.size() << " bytes\n";
 	std::cout << "Shader frag.spv size in memory: " << fragShaderCode.size() << " bytes\n";
 
 	// Compare against file size on disk
-	auto vertFileSize = std::filesystem::file_size("shaders/shader.vert.spv");
-	auto fragFileSize = std::filesystem::file_size("shaders/shader.frag.spv");
+	auto vertFileSize = std::filesystem::file_size("shaders/vert.spv");
+	auto fragFileSize = std::filesystem::file_size("shaders/frag.spv");
 	std::cout << "Shader vert.spv size on disk:   " << vertFileSize << " bytes\n";
 	std::cout << "Shader frag.spv size on disk:   " << fragFileSize << " bytes\n";
 }
