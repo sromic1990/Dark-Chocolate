@@ -1,5 +1,4 @@
 #include <DrawTriangle.hpp>
-#include <stdexcept>
 #include <iostream>
 
 int main()
