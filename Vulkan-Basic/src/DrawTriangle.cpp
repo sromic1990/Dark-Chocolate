@@ -9,7 +9,6 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
-#include <filesystem>
 
 
 static bool areAllExtensionsSupported(const std::vector<const char*>&, const std::vector<VkExtensionProperties>&);
