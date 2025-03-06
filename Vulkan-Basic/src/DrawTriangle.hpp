@@ -13,6 +13,7 @@ private:
 	void initWindow();
 	void initVulkan();
 	void mainLoop();
+	void drawFrame();
 	void cleanup();
 
 	void createInstance();
@@ -28,7 +29,8 @@ private:
 	void createFramebuffers();
 	void createCommandPool();
 	void createCommandBuffer();
-	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
+	void createSyncObjects();
 
 	std::vector<const char*> getRequiredExtension() const;
 
@@ -60,6 +62,9 @@ private:
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkCommandPool commandPool;
 	VkCommandBuffer commandBuffer;
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
+	VkFence inFlightFence;
 
 	#ifdef NDEBUG
 	const bool enableValidationLayers = false;
