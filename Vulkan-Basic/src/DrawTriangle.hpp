@@ -41,11 +41,6 @@ private:
 
 	inline const static std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	inline const static std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-#ifdef NDEBUG
-	const bool enableValidationLayers = false;
-#else
-	const bool enableValidationLayers = true;
-#endif
 
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
@@ -65,4 +60,10 @@ private:
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkCommandPool commandPool;
 	VkCommandBuffer commandBuffer;
+
+	#ifdef NDEBUG
+	const bool enableValidationLayers = false;
+#else
+	const bool enableValidationLayers = true;
+#endif
 };
