@@ -7,6 +7,7 @@
 class DrawTriangle
 {
 public:
+	bool framebufferResized = false;
 	void run();
 
 private:
@@ -31,6 +32,8 @@ private:
 	void createCommandBuffers();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
 	void createSyncObjects();
+	void recreateSwapChain();
+	void cleanupSwapChain();
 
 	std::vector<const char*> getRequiredExtension() const;
 
