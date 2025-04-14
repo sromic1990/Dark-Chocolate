@@ -61,9 +61,10 @@ private:
 	void createImageViews();
 	void createRenderPass();
 	void createGraphicsPipeline();
-	void createFramebuffers();
+	void createFrameBuffers();
 	void createCommandPool();
 	void createVertexBuffer();
+	void createIndexBuffer();
 	void createCommandBuffers();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) const;
 	void createSyncObjects();
@@ -100,6 +101,8 @@ private:
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
 	VkCommandPool commandPool;
 	std::vector<VkCommandBuffer> commandBuffers;
 	std::vector<VkSemaphore> imageAvailableSemaphores;
