@@ -43,8 +43,6 @@ private:
 
 	std::vector<const char*> getRequiredExtension() const;
 
-	const uint32_t WIDTH = 800;
-	const uint32_t HEIGHT = 600;
 	GLFWwindow* window;
 
 	friend static bool checkValidationLayerSupport();
