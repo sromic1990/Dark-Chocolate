@@ -1,9 +1,9 @@
-#include <DrawTriangle.hpp>
+#include <VulkanRenderer.hpp>
 #include <iostream>
 
 int main()
 {
-	DrawTriangle app;
+	VulkanRenderer app;
 
 	try
 	{

@@ -1,4 +1,4 @@
-#include <DrawTriangle.hpp>
+#include <VulkanRenderer.hpp>
 #include <ShaderUtils.hpp>
 
 #include <stdexcept>
@@ -9,9 +9,55 @@
 #include <cstdint>
 #include <limits>
 #include <algorithm>
+#include <array>
+#include <chrono>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
-const std::vector<DrawTriangle::Vertex> vertices =
+
+struct Vertex
+{
+	glm::vec2 pos;
+	glm::vec3 color;
+
+	static VkVertexInputBindingDescription getBindingDescription()
+	{
+		VkVertexInputBindingDescription bindingDescription{};
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDescription;
+	}
+
+	static std::array<VkVertexInputAttributeDescription, 2> getAttributeDescriptions()
+	{
+		std::array<VkVertexInputAttributeDescription, 2> attributeDescriptions{};
+		attributeDescriptions[0].binding = 0;
+		attributeDescriptions[0].location = 0;
+		attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+		attributeDescriptions[1].binding = 0;
+		attributeDescriptions[1].location = 1;
+		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+		return attributeDescriptions;
+	}
+};
+
+struct UniformBufferObject
+{
+	alignas(16) glm::mat4 model;
+	alignas(16) glm::mat4 view;
+	alignas(16) glm::mat4 proj;
+};
+
+const std::vector<Vertex> vertices =
 {
 	{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 	{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
@@ -65,8 +111,9 @@ VkShaderModule createShaderModule(const std::vector<char>&, VkDevice);
 uint32_t findMemoryType(uint32_t, VkPhysicalDevice, VkMemoryPropertyFlags);
 void createBuffer(VkPhysicalDevice, VkDevice, VkDeviceSize, VkBufferUsageFlags, VkMemoryPropertyFlags, VkBuffer&, VkDeviceMemory&);
 void copyBuffer(VkDevice, VkCommandPool, VkQueue, VkBuffer, VkBuffer, VkDeviceSize);
+void updateUniformBuffer(uint32_t, VkExtent2D, std::vector<void*>&);
 
-void DrawTriangle::run()
+void VulkanRenderer::run()
 {
 	initWindow();
 	initVulkan();
@@ -74,7 +121,7 @@ void DrawTriangle::run()
 	cleanup();
 }
 
-void DrawTriangle::initWindow()
+void VulkanRenderer::initWindow()
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -84,7 +131,7 @@ void DrawTriangle::initWindow()
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
-void DrawTriangle::initVulkan()
+void VulkanRenderer::initVulkan()
 {
 	createInstance();
 	setupDebugMessenger();
@@ -94,16 +141,20 @@ void DrawTriangle::initVulkan()
 	createSwapChain();
 	createImageViews();
 	createRenderPass();
+	createDescriptorSetLayout();
 	createGraphicsPipeline();
 	createFrameBuffers();
 	createCommandPool();
 	createVertexBuffer();
 	createIndexBuffer();
+	createUniformBuffers();
+	createDescriptorPool();
+	createDescriptorSets();
 	createCommandBuffers();
 	createSyncObjects();
 }
 
-void DrawTriangle::createInstance()
+void VulkanRenderer::createInstance()
 {
 	VkApplicationInfo appInfo{};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -161,7 +212,7 @@ void DrawTriangle::createInstance()
 	}
 }
 
-void DrawTriangle::setupDebugMessenger()
+void VulkanRenderer::setupDebugMessenger()
 {
 	if (!enableValidationLayers) return;
 
@@ -174,7 +225,7 @@ void DrawTriangle::setupDebugMessenger()
 	}
 }
 
-void DrawTriangle::createSurface()
+void VulkanRenderer::createSurface()
 {
 	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
 	{
@@ -182,7 +233,7 @@ void DrawTriangle::createSurface()
 	}
 }
 
-void DrawTriangle::pickPhysicalDevice()
+void VulkanRenderer::pickPhysicalDevice()
 {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
@@ -209,7 +260,7 @@ void DrawTriangle::pickPhysicalDevice()
 	}
 }
 
-void DrawTriangle::createLogicalDevice()
+void VulkanRenderer::createLogicalDevice()
 {
 	QueueFamilyIndices indices = findQueueFamilies(physicalDevice, surface);
 
@@ -256,7 +307,7 @@ void DrawTriangle::createLogicalDevice()
 	vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 }
 
-void DrawTriangle::createSwapChain()
+void VulkanRenderer::createSwapChain()
 {
 	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice, surface);
 
@@ -314,7 +365,7 @@ void DrawTriangle::createSwapChain()
 	swapChainExtent = extent;
 }
 
-void DrawTriangle::recreateSwapChain()
+void VulkanRenderer::recreateSwapChain()
 {
 	int width = 0, height = 0;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -333,7 +384,7 @@ void DrawTriangle::recreateSwapChain()
 	createFrameBuffers();
 }
 
-void DrawTriangle::createImageViews()
+void VulkanRenderer::createImageViews()
 {
 	swapChainImageViews.resize(swapChainImages.size());
 
@@ -362,7 +413,7 @@ void DrawTriangle::createImageViews()
 	}
 }
 
-void DrawTriangle::createRenderPass()
+void VulkanRenderer::createRenderPass()
 {
 	VkAttachmentDescription colorAttachment{};
 	colorAttachment.format = swapChainImageFormat;
@@ -407,7 +458,27 @@ void DrawTriangle::createRenderPass()
 	}
 }
 
-void DrawTriangle::createGraphicsPipeline()
+void VulkanRenderer::createDescriptorSetLayout()
+{
+	VkDescriptorSetLayoutBinding uboLayoutBinding{};
+	uboLayoutBinding.binding = 0;
+	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	uboLayoutBinding.descriptorCount = 1;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.pImmutableSamplers = nullptr;
+
+	VkDescriptorSetLayoutCreateInfo layoutInfo{};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInfo.bindingCount = 1;
+	layoutInfo.pBindings = &uboLayoutBinding;
+
+	if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create descriptor set layout!");
+	}
+}
+
+void VulkanRenderer::createGraphicsPipeline()
 {
 	auto bindingDescription = Vertex::getBindingDescription();
 	auto attributeDescriptions = Vertex::getAttributeDescriptions();
@@ -480,7 +551,7 @@ void DrawTriangle::createGraphicsPipeline()
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-	rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f;
 	rasterizer.depthBiasClamp = 0.0f;
@@ -518,8 +589,8 @@ void DrawTriangle::createGraphicsPipeline()
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pSetLayouts = nullptr;
+	pipelineLayoutInfo.setLayoutCount = 1;
+	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 	pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
@@ -555,9 +626,9 @@ void DrawTriangle::createGraphicsPipeline()
 	vkDestroyShaderModule(device, fragShaderModule, nullptr);
 }
 
-void DrawTriangle::createFrameBuffers()
+void VulkanRenderer::createFrameBuffers()
 {
-	swapChainFramebuffers.resize(swapChainImageViews.size());
+	swapChainFrameBuffers.resize(swapChainImageViews.size());
 
 	for (size_t i = 0; i< swapChainImageViews.size(); ++i)
 	{
@@ -574,14 +645,14 @@ void DrawTriangle::createFrameBuffers()
 		framebufferInfo.height = swapChainExtent.height;
 		framebufferInfo.layers = 1;
 
-		if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS)
+		if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFrameBuffers[i]) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create framebuffer!");
 		}
 	}
 }
 
-void DrawTriangle::createCommandPool()
+void VulkanRenderer::createCommandPool()
 {
 	QueueFamilyIndices queueFamilyIndices = findQueueFamilies(physicalDevice, surface);;
 
@@ -596,7 +667,7 @@ void DrawTriangle::createCommandPool()
 	}
 }
 
-void DrawTriangle::createVertexBuffer()
+void VulkanRenderer::createVertexBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
@@ -616,7 +687,7 @@ void DrawTriangle::createVertexBuffer()
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void DrawTriangle::createIndexBuffer()
+void VulkanRenderer::createIndexBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
@@ -637,7 +708,78 @@ void DrawTriangle::createIndexBuffer()
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void DrawTriangle::createCommandBuffers()
+void VulkanRenderer::createUniformBuffers()
+{
+	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+	uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
+	uniformBuffersMemory.resize(MAX_FRAMES_IN_FLIGHT);
+	uniformBuffersMapped.resize(MAX_FRAMES_IN_FLIGHT);
+
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	{
+		createBuffer(physicalDevice, device, bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+		vkMapMemory(device, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
+	}
+}
+
+void VulkanRenderer::createDescriptorPool()
+{
+	VkDescriptorPoolSize poolSize{};
+	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSize.descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+
+	VkDescriptorPoolCreateInfo poolInfo{};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.poolSizeCount = 1;
+	poolInfo.pPoolSizes = &poolSize;
+	poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	poolInfo.flags = 0;
+
+	if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create descriptor pool!");
+	}
+}
+
+void VulkanRenderer::createDescriptorSets()
+{
+	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
+	VkDescriptorSetAllocateInfo allocInfo{};
+	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInfo.descriptorPool = descriptorPool;
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
+	allocInfo.pSetLayouts = layouts.data();
+
+	descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
+	if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to allocate descriptor sets!");
+	}
+
+	for (size_t i = 0; i< MAX_FRAMES_IN_FLIGHT; ++i)
+	{
+		VkDescriptorBufferInfo bufferInfo{};
+		bufferInfo.buffer = uniformBuffers[i];
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(UniformBufferObject);
+
+		VkWriteDescriptorSet descriptorWrite{};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = descriptorSets[i];
+		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pBufferInfo = &bufferInfo;
+		descriptorWrite.pImageInfo = nullptr;
+		descriptorWrite.pTexelBufferView = nullptr;
+
+		vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
+	}
+}
+
+void VulkanRenderer::createCommandBuffers()
 {
 	commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
 
@@ -653,7 +795,7 @@ void DrawTriangle::createCommandBuffers()
 	}
 }
 
-void DrawTriangle::createSyncObjects()
+void VulkanRenderer::createSyncObjects()
 {
 	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -680,7 +822,7 @@ void DrawTriangle::createSyncObjects()
 	}
 }
 
-void DrawTriangle::mainLoop()
+void VulkanRenderer::mainLoop()
 {
 	while (!glfwWindowShouldClose(window))
 	{
@@ -691,7 +833,7 @@ void DrawTriangle::mainLoop()
 	vkDeviceWaitIdle(device);
 }
 
-void DrawTriangle::drawFrame()
+void VulkanRenderer::drawFrame()
 {
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -711,6 +853,8 @@ void DrawTriangle::drawFrame()
 
 	vkResetCommandBuffer(commandBuffers[currentFrame], 0);
 	recordCommandBuffer(commandBuffers[currentFrame], imageIndex);
+
+	updateUniformBuffer(currentFrame, swapChainExtent, uniformBuffersMapped);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -755,7 +899,7 @@ void DrawTriangle::drawFrame()
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void DrawTriangle::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
+void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) const
 {
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -770,7 +914,7 @@ void DrawTriangle::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = renderPass;
-	renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+	renderPassInfo.framebuffer = swapChainFrameBuffers[imageIndex];
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapChainExtent;
 
@@ -801,7 +945,7 @@ void DrawTriangle::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 	scissor.extent = swapChainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-	// vkCmdDraw(commandBuffer, static_cast<uint32_t>(vertices.size()), 1, 0, 0);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[currentFrame], 0, nullptr);
 	vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
 	vkCmdEndRenderPass(commandBuffer);
@@ -812,9 +956,9 @@ void DrawTriangle::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t i
 	}
 }
 
-void DrawTriangle::cleanupSwapChain()
+void VulkanRenderer::cleanupSwapChain()
 {
-	for (auto framebuffer : swapChainFramebuffers)
+	for (auto framebuffer : swapChainFrameBuffers)
 	{
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
@@ -827,10 +971,18 @@ void DrawTriangle::cleanupSwapChain()
 	vkDestroySwapchainKHR(device, swapChain, nullptr);
 }
 
-void DrawTriangle::cleanup()
+void VulkanRenderer::cleanup()
 {
 	cleanupSwapChain();
 
+	for (size_t i = 0; i< MAX_FRAMES_IN_FLIGHT; ++i)
+	{
+		vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+		vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+	}
+
+	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 	vkDestroyBuffer(device, indexBuffer, nullptr);
 	vkFreeMemory(device, indexBufferMemory, nullptr);
 	vkDestroyBuffer(device, vertexBuffer, nullptr);
@@ -864,7 +1016,7 @@ void DrawTriangle::cleanup()
 	glfwTerminate();
 }
 
-std::vector<const char*> DrawTriangle::getRequiredExtension() const
+std::vector<const char*> VulkanRenderer::getRequiredExtension() const
 {
 	uint32_t glfwExtensionCount = 0;
 	const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -878,7 +1030,7 @@ std::vector<const char*> DrawTriangle::getRequiredExtension() const
 
 static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
 {
-	auto app = reinterpret_cast<DrawTriangle*>(glfwGetWindowUserPointer(window));
+	auto app = reinterpret_cast<VulkanRenderer*>(glfwGetWindowUserPointer(window));
 	app->framebufferResized = true;
 }
 
@@ -909,7 +1061,7 @@ static bool checkValidationLayerSupport()
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-	for (const char* layerName : DrawTriangle::validationLayers)
+	for (const char* layerName : VulkanRenderer::validationLayers)
 	{
 		bool layerFound = false;
 		for (const auto& layerProperties : availableLayers)
@@ -994,7 +1146,7 @@ bool checkDeviceExtensionSupport(VkPhysicalDevice device)
 	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
 	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-	std::set<std::string> requiredExtensions(DrawTriangle::deviceExtensions.begin(), DrawTriangle::deviceExtensions.end());
+	std::set<std::string> requiredExtensions(VulkanRenderer::deviceExtensions.begin(), VulkanRenderer::deviceExtensions.end());
 
 	for (const auto& extension : availableExtensions)
 	{
@@ -1208,4 +1360,20 @@ void copyBuffer(VkDevice device, VkCommandPool commandPool, VkQueue graphicsQueu
 	vkQueueWaitIdle(graphicsQueue);
 
 	vkFreeCommandBuffers(device, commandPool, 1, &commandBuffer);
+}
+
+void updateUniformBuffer(uint32_t currentImage, VkExtent2D swapChainExtent, std::vector<void*>& uniformBuffersMapped)
+{
+	static auto startTime = std::chrono::high_resolution_clock::now();
+
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+
+	UniformBufferObject ubo{};
+	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+	ubo.proj[1][1] *= -1; // Invert Y axis
+
+	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
