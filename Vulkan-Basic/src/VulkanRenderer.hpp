@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include <vector>
+#define VK_ENABLE_BETA_EXTENSIONS
 
 class VulkanRenderer
 {
@@ -30,6 +31,9 @@ private:
 	void createGraphicsPipeline();
 	void createFrameBuffers();
 	void createCommandPool();
+	void createTextureImage();
+	void createTextureImageView();
+	void createTextureSampler();
 	void createVertexBuffer();
 	void createIndexBuffer();
 	void createUniformBuffers();
@@ -45,7 +49,7 @@ private:
 
 	GLFWwindow* window;
 
-	friend static bool checkValidationLayerSupport();
+	friend bool checkValidationLayerSupport();
 	friend bool checkDeviceExtensionSupport(VkPhysicalDevice device);
 
 	inline const static std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
@@ -54,6 +58,7 @@ private:
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkPhysicalDeviceProperties deviceProperties;
 	VkDevice device;
 	VkQueue graphicsQueue;
 	VkSurfaceKHR surface;
@@ -83,6 +88,10 @@ private:
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
 	uint32_t currentFrame = 0;
+	VkImage textureImage;
+	VkDeviceMemory textureImageMemory;
+	VkImageView textureImageView;
+	VkSampler textureSampler;
 
 	#ifdef NDEBUG
 	const bool enableValidationLayers = false;
