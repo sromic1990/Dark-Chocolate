@@ -3,7 +3,6 @@
 #include <GLFW/glfw3.h>
 
 #include <vector>
-#define VK_ENABLE_BETA_EXTENSIONS
 
 class VulkanRenderer
 {

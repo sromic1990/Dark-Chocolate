@@ -1,3 +1,5 @@
+#define VK_ENABLE_BETA_EXTENSIONS
+
 #include <VulkanRenderer.hpp>
 #include <ShaderUtils.hpp>
 
