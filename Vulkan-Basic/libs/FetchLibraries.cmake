@@ -22,3 +22,10 @@ FetchContent_Declare(
 	GIT_REPOSITORY https://github.com/nothings/stb.git
 	GIT_TAG  master
 )
+
+#TINY OBJ LOADER
+FetchContent_Declare(
+	tinyobjloader
+	GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
+	GIT_TAG v1.0.6
+)

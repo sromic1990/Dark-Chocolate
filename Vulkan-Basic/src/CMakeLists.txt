@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.26)
 FetchContent_MakeAvailable(glfw)
 FetchContent_MakeAvailable(glm)
 FetchContent_MakeAvailable(stb)
+FetchContent_MakeAvailable(tinyobjloader)
 
 # ENSURE VULKAN IS INSTALLED
 if(APPLE)
@@ -44,6 +45,10 @@ add_custom_command(TARGET Vulkan-Basic POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/src/textures $<TARGET_FILE_DIR:Vulkan-Basic>/textures)
 
+add_custom_command(TARGET Vulkan-Basic POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/src/models $<TARGET_FILE_DIR:Vulkan-Basic>/models)
+
 # INCLUDE DIRECTORIES AND LINK THE LIBRARIES
 target_include_directories(Vulkan-Basic PRIVATE ${Vulkan_INCLUDE_DIRS})
 target_link_libraries(Vulkan-Basic PRIVATE ${Vulkan_LIBRARIES})
@@ -53,6 +58,7 @@ target_link_libraries(Vulkan-Basic PRIVATE glfw)
 add_library(stb_interface INTERFACE)
 target_include_directories(stb_interface INTERFACE ${stb_SOURCE_DIR})
 target_link_libraries(Vulkan-Basic PRIVATE stb_interface)
+target_link_libraries(Vulkan-Basic PRIVATE tinyobjloader)
 
 
 # DEBUG AND RELEASE FLAGS
