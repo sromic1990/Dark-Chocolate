@@ -110,3 +110,7 @@ vulkan*.log
 packages/
 __pycache__/
 node_modules/
+
+# Include Models and Assets
+!**/models/**/*.obj
+!**/models/*.obj
