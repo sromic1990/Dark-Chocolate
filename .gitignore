@@ -114,3 +114,4 @@ node_modules/
 # Include Models and Assets
 !**/models/**/*.obj
 !**/models/*.obj
+Vulkan/project-files/
