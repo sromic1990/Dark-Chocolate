@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 4.2)
 
 # POPULATE 3RD PARTY LIBRARIES
 FetchContent_MakeAvailable(glfw)
@@ -23,6 +23,7 @@ else()
     # Add Vulkan to your include directories
     include_directories(${Vulkan_INCLUDE_DIRS})
     link_directories(${VULKAN_SDK}/Lib)
+    
 
     # Debug output
     message(STATUS "Manually set Vulkan SDK")
@@ -37,35 +38,41 @@ file(GLOB_RECURSE SUBDIRECTORIES
 )
 source_group("src" "${CMAKE_SOURCE_DIR}/src" ${SUBDIRECTORIES})
 
-add_executable(Vulkan-Basic 
+add_executable(Dark-Chocolate 
     ${SUBDIRECTORIES}
 )
 
-add_custom_command(TARGET Vulkan-Basic POST_BUILD
+add_custom_command(TARGET Dark-Chocolate POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/src/textures $<TARGET_FILE_DIR:Vulkan-Basic>/textures)
+    ${CMAKE_SOURCE_DIR}/src/textures $<TARGET_FILE_DIR:Dark-Chocolate>/textures)
 
-add_custom_command(TARGET Vulkan-Basic POST_BUILD
+add_custom_command(TARGET Dark-Chocolate POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/src/models $<TARGET_FILE_DIR:Vulkan-Basic>/models)
+    ${CMAKE_SOURCE_DIR}/src/models $<TARGET_FILE_DIR:Dark-Chocolate>/models)
+
+    add_custom_command(TARGET Dark-Chocolate POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_BINARY_DIR}/shaders
+    $<TARGET_FILE_DIR:Dark-Chocolate>/shaders
+)
 
 # INCLUDE DIRECTORIES AND LINK THE LIBRARIES
-target_include_directories(Vulkan-Basic PRIVATE ${Vulkan_INCLUDE_DIRS})
-target_link_libraries(Vulkan-Basic PRIVATE ${Vulkan_LIBRARIES})
-target_include_directories(Vulkan-Basic PRIVATE "${CMAKE_SOURCE_DIR}/src")
-target_include_directories(Vulkan-Basic PRIVATE "${CMAKE_SOURCE_DIR}/src/shaders")
-target_link_libraries(Vulkan-Basic PRIVATE glfw)
+target_include_directories(Dark-Chocolate PRIVATE ${Vulkan_INCLUDE_DIRS})
+target_link_libraries(Dark-Chocolate PRIVATE ${Vulkan_LIBRARIES})
+target_include_directories(Dark-Chocolate PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(Dark-Chocolate PRIVATE "${CMAKE_SOURCE_DIR}/src/shaders")
+target_link_libraries(Dark-Chocolate PRIVATE glfw)
 add_library(stb_interface INTERFACE)
 target_include_directories(stb_interface INTERFACE ${stb_SOURCE_DIR})
-target_link_libraries(Vulkan-Basic PRIVATE stb_interface)
-target_link_libraries(Vulkan-Basic PRIVATE tinyobjloader)
+target_link_libraries(Dark-Chocolate PRIVATE stb_interface)
+target_link_libraries(Dark-Chocolate PRIVATE tinyobjloader)
 
 
 # DEBUG AND RELEASE FLAGS
 if(CMAKE_BUILD_TYPE STREQUAL "debug")
-	target_compile_definitions(Vulkan-Basic PUBLIC DEBUG)
+	target_compile_definitions(Dark-Chocolate PUBLIC DEBUG)
 elseif(CMAKE_BUILD_TYPE STREQUAL "release")
-	target_compile_definitions(Vulkan-Basic PUBLIC NDEBUG)
+	target_compile_definitions(Dark-Chocolate PUBLIC NDEBUG)
 endif()
 
 # LOCATE GLSLC SHADER COMPILER FOR CROSS-PLATFORM USAGE
@@ -116,4 +123,4 @@ add_custom_target(CompileShaders ALL
 )
 
 # MAKE THE MAIN EXECUTIBLE DEPEND ON THESE COMPILED SHADERS
-add_dependencies(Vulkan-Basic CompileShaders)
+add_dependencies(Dark-Chocolate CompileShaders)
