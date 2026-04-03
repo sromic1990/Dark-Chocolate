@@ -17,7 +17,7 @@ Dark Chocolate is a real-time graphics engine that implements five GPU backends 
 
 By the end of Phase 1, the engine will have a working OpenGL, DX11, DX12, Vulkan, and Metal renderer, a scene graph with ECS, a cross-platform shader pipeline, compute shader support, and an editor shell powered by Dear ImGui — all enforcing strict architectural separation between engine logic and GPU platform code.
 
-**Author:** Sourav Chatterjee · Graphics Engineer, Unity Technologies
+**Author:** Sourav Chatterjee · Graphics Engineer
 
 ---
 
@@ -31,11 +31,11 @@ main() / EntryPoint.cpp
     │   └── RuntimeLayer (play mode · shipped builds)
     └── RenderCommand (static facade)
         ──── << THE WALL >> ────
-        ├─ OpenGLBackend    (Part 2c)
-        ├─ DX11Backend      (Part 3)
-        ├─ DX12Backend      (Part 4)
-        ├─ VulkanBackend    (Part 5)
-        └─ MetalBackend     (Part 6)
+        ├─ OpenGLBackend
+        ├─ DX11Backend
+        ├─ DX12Backend
+        ├─ VulkanBackend
+        └─ MetalBackend
 ```
 
 **The Wall** is the engine's core architectural invariant: nothing above `IRenderBackend` ever includes a platform GPU header. No `<d3d12.h>`, no `<vulkan/vulkan.h>`, no `<Metal/Metal.h>` above `src/Renderer/Backends/`. No exceptions.
@@ -68,7 +68,15 @@ Platform defaults: **Windows → DX12**, **macOS → Metal**, **Linux → Vulkan
 
 Phase 1 builds the engine from an empty skeleton to a full five-backend renderer with scene graph, shader pipeline, compute shaders, and an editor shell. Target: **273 tests**.
 
-### Parts 1 — Engine Core
+### Project Skeleton
+ 
+| Deliverable | Status |
+|-------------|--------|
+| Directory structure, root `CMakeLists.txt`, `CMakePresets.json` | ⬜ |
+| All five backend targets compile with empty `Init()` stubs | ⬜ |
+| GLFW window creation on all three platforms | ⬜ |
+
+### Engine Core
 
 | Deliverable | Status |
 |-------------|--------|
@@ -81,7 +89,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | GitHub Actions CI — Linux (ubuntu-24.04) + Windows (windows-2022) | ⬜ |
 | Catch2 test harness with `test_listener.cpp` | ⬜ |
 
-### Part 2 — OpenGL Backend
+### OpenGL Backend
 
 | Deliverable | Status |
 |-------------|--------|
@@ -89,7 +97,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | Triangle rendering with vertex/index buffers | ⬜ |
 | Integration tests via Mesa llvmpipe + `xvfb-run` on CI | ⬜ |
 
-### Part 3 — DirectX 11 Backend
+### DirectX 11 Backend
 
 | Deliverable | Status |
 |-------------|--------|
@@ -97,7 +105,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | `DX11Buffer`, `DX11Shader`, `DX11InputLayout` | ⬜ |
 | WARP software rasterizer integration tests on CI | ⬜ |
 
-### Part 4 — DirectX 12 Backend
+### DirectX 12 Backend
 
 | Deliverable | Status |
 |-------------|--------|
@@ -106,7 +114,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | N-frames-in-flight with fence-based synchronization | ⬜ |
 | WARP integration tests on CI | ⬜ |
 
-### Part 5 — Vulkan Backend
+### Vulkan Backend
 
 | Deliverable | Status |
 |-------------|--------|
@@ -115,7 +123,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | Render pass, pipeline, synchronization (fences + semaphores) | ⬜ |
 | MoltenVK support on macOS | ⬜ |
 
-### Part 6 — Metal Backend
+### Metal Backend
 
 | Deliverable | Status |
 |-------------|--------|
@@ -125,7 +133,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | Metal 4 path — `MTL4CommandBuffer`, `MTL4ArgumentTable`, `MTL4Compiler` | ⬜ |
 | Dual guards: compile-time `#if defined(__MAC_26_0)` + runtime `@available(macOS 26.0, *)` | ⬜ |
 
-### Part 7 — Scene Graph + Asset Pipeline
+### Scene Graph + Asset Pipeline
 
 | Deliverable | Status |
 |-------------|--------|
@@ -133,7 +141,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | `AssetManager` with GUID-based references, glTF/FBX import (Assimp) | ⬜ |
 | Edit/play mode separation | ⬜ |
 
-### Part 8 — Shader System
+### Shader System
 
 | Deliverable | Status |
 |-------------|--------|
@@ -143,7 +151,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | `SPIRVReflector` — uniform/texture binding extraction | ⬜ |
 | Multi-backend link audit (ODR violation diagnosis) | ⬜ |
 
-### Part 9 — Scene Implementation + GPU Upload
+### Scene Implementation + GPU Upload
 
 | Deliverable | Status |
 |-------------|--------|
@@ -152,7 +160,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | `SceneRenderer` — GPU upload across all five backends | ⬜ |
 | `GPUResourceCache`, `Material` system, `Uniforms` | ⬜ |
 
-### Part 10 — Compute Shaders
+### Compute Shaders
 
 | Deliverable | Status |
 |-------------|--------|
@@ -161,7 +169,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | `IGPURWBuffer` (read-write GPU buffers) | ⬜ |
 | Compute implementations for all five backends | ⬜ |
 
-### Part 11 — Architecture Finale
+### Architecture Finale
 
 | Deliverable | Status |
 |-------------|--------|
@@ -402,4 +410,4 @@ Phase 1 delivers the engine foundation — five backends, shader pipeline, scene
 
 Proprietary. All rights reserved.
 
-**© Sourav Chatterjee · Graphics Engineer, Unity Technologies**
+**© Sourav Chatterjee · Graphics Engineer**
