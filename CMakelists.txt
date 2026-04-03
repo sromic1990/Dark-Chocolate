@@ -47,7 +47,7 @@ FetchContent_MakeAvailable(spdlog)
 # Dear ImGui docking --- no CMakeLists, define target manually
 FetchContent_Declare(imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
-    GIT_TAG docing  
+    GIT_TAG docking  
     GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(imgui)
