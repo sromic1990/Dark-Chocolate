@@ -187,7 +187,7 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 ```
 DarkChocolate/
 ├── CMakeLists.txt                  # Root: FetchContent for all deps, C++20
-├── CMakePresets.json               # windows-debug, windows-release, macos-debug, linux-ci
+├── CMakePresets.json               # windows-vs, macos-debug, linux-ci
 ├── .github/workflows/ci.yml       # Unit + integration tests (Mesa, WARP)
 │
 ├── src/
@@ -229,11 +229,11 @@ DarkChocolate/
 │   │   ├── IGPUTexture.h
 │   │   │
 │   │   └── Backends/
-│   │       ├── OpenGL/                 # Part 2c
-│   │       ├── DX11/                   # Part 3
-│   │       ├── DX12/                   # Part 4
-│   │       ├── Vulkan/                 # Part 5
-│   │       └── Metal/                  # Part 6
+│   │       ├── OpenGL/                 
+│   │       ├── DX11/                   
+│   │       ├── DX12/                   
+│   │       ├── Vulkan/                 
+│   │       └── Metal/                  
 │   │
 │   ├── Shader/
 │   │   ├── DCShaderTypes.h
@@ -341,8 +341,8 @@ All fetched automatically via CMake `FetchContent`. No manual downloads.
 
 ### Prerequisites
 
-- **CMake 3.25+** and **Ninja** (or your preferred generator)
-- **C++20 compiler:** MSVC 2022+, Clang 15+, or GCC 13+
+- **CMake 4.2+** (Ninja required on Linux; Windows and macOS use IDE generators)
+- **C++20 compiler:** MSVC 2026+ (Visual Studio 18), Clang 15+, or GCC 13+
 - **Platform SDK** for your target backend(s)
 
 ### Quick Start
@@ -352,18 +352,21 @@ git clone <repo-url>
 cd dark-chocolate
 
 # Pick your preset
-cmake --preset windows-debug      # Windows (MSVC + Ninja)
+cmake --preset windows-vs         # Windows (Visual Studio 18 2026, x64)
 cmake --preset macos-debug        # macOS (Xcode)
 cmake --preset linux-ci           # Linux (Ninja, Release)
 
-cmake --build --preset <preset-name>
+cmake --build --preset windows-debug    # Debug build
+cmake --build --preset windows-release  # Release build
+cmake --build --preset macos-debug
+cmake --build --preset linux-ci
 ```
 
 ### Running Tests
 
 ```bash
 cd build/<preset>
-ctest --output-on-failure
+ctest -C Debug --output-on-failure     # or -C Release
 ```
 
 Integration tests need a GPU or software fallback:
