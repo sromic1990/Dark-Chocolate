@@ -1,116 +1,174 @@
-# Visual Studio specific
-.vs/
-*.vcxproj.user
-*.vcxproj.filters
-*.suo
-*.ncb
-*.sdf
-*.pdb
-*.opendb
-*.VC.db
-*.code-workspace
+# =============================================================================
+# Dark Chocolate — Modern Graphics Renderer
+# .gitignore
+# =============================================================================
 
-# Build outputs
-Build/
-Debug/
-Release/
-x64/
-x86/
-ARM/
-ARM64/
-*.obj
-*.lib
-*.dll
-*.exp
-*.idb
-*.ipch
-*.ilk
-*.iobj
-*.ipdb
-*.pdb
-*.rsp
-*.tlb
-*.tli
-*.tlh
-*.pch
-*.log
-*.tlog/
-*.lastbuildstate
-
-# CMake
+# ---------------------------------------------------------------------------
+# CMake / Build
+# ---------------------------------------------------------------------------
+build/
+out/
+cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
-Makefile
-CMakeScripts/
 cmake_install.cmake
+Makefile
+compile_commands.json
+install_manifest.txt
+CTestTestfile.cmake
+Testing/
 
-# DirectX Shader Compiler output
+# ---------------------------------------------------------------------------
+# C++ Compiler Outputs
+# ---------------------------------------------------------------------------
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exp
+*.pdb
+*.ilk
+*.idb
+*.exe
+*.out
+*.app
+*.dSYM/
+
+# Precompiled headers
+*.pch
+*.gch
+*.pchi
+
+# ---------------------------------------------------------------------------
+# Visual Studio / MSVC
+# ---------------------------------------------------------------------------
+.vs/
+*.vcxproj.user
+*.suo
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.opendb
+x64/
+x86/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+
+# ---------------------------------------------------------------------------
+# Xcode (Metal / Metal 4 backend)
+# ---------------------------------------------------------------------------
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.xcuserstate
+
+# ---------------------------------------------------------------------------
+# Shader Intermediates
+# ---------------------------------------------------------------------------
+# SPIR-V (Vulkan / glslang output)
+*.spv
+*.spvasm
+
+# DXBC / DXIL (DX11 / DX12 compiled shaders)
 *.cso
-*.hlsl.old
-*.fxc_output
-*.fx
 *.dxbc
 *.dxil
+*.fxo
 
-# GLFW build artifacts
-glfw/build/
-glfw/bin/
-glfw/*.dll
-glfw/*.lib
-glfw/*.exp
-glfw/*.ilk
-glfw/*.pdb
-glfw/*.idb
+# Metal shader archives / compiled
+*.metallib
+*.air
+*.metal-ar
 
-# Vulkan Specific (SPIR-V binaries and shader artifacts)
-*.spv        # Compiled Vulkan shader binary files
-*.vert.spv   # Vertex shader compiled
-*.frag.spv   # Fragment shader compiled
-*.comp.spv   # Compute shader compiled
-*.geom.spv   # Geometry shader compiled
-*.tesc.spv   # Tessellation control shader compiled
-*.tese.spv   # Tessellation evaluation shader compiled
-*.rgen.spv   # Ray generation shader compiled
-*.rmiss.spv  # Ray miss shader compiled
-*.rchit.spv  # Ray hit shader compiled
-*.shaderc    # Temporary Vulkan shader compilation output
-*.spirv      # Alternative SPIR-V output extension
+# Shader cache directories
+shader_cache/
+pipeline_cache/
 
-# Vulkan Validation Layer Cache
-VK_LAYER_PATH
-VK_ICD_FILENAMES
+# ---------------------------------------------------------------------------
+# GPU Capture / Profiling
+# ---------------------------------------------------------------------------
+*.gputrace
+*.renderdoc
+*.rdc
+*.nvprof
+*.nsight
+*.pix
 
-# Vulkan Loader and Debug Report Files
-vulkaninfo.txt
-VkLayer*.log
-vulkan*.log
+# ---------------------------------------------------------------------------
+# Third-Party / Vendor (if fetched at build time)
+# ---------------------------------------------------------------------------
+# Uncomment if you vendor these via CMake FetchContent or git submodules
+# external/
+# third_party/
+# vendor/
 
-# Editor & IDE specific
-*.sln.cache
-*.sln.docstates
-*.VC.opendb
-*.VC.db
+# ---------------------------------------------------------------------------
+# Dear ImGui
+# ---------------------------------------------------------------------------
+imgui.ini
+
+# ---------------------------------------------------------------------------
+# Catch2
+# ---------------------------------------------------------------------------
+# Test runner binaries are already covered by *.exe / *.out above.
+# JUnit XML output from CI:
+test-results/
+*.junit.xml
+
+# ---------------------------------------------------------------------------
+# OS Junk
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# ---------------------------------------------------------------------------
+# IDE / Editor
+# ---------------------------------------------------------------------------
 .idea/
-*.userprefs
+.vscode/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
+.cache/
+.ccls-cache/
+.clangd/
+compile_flags.txt
 
-# Auto-generated files
-*.generated.*
-*.gen.*
-*.bak
-*.tmp
-*.cache
-*.dmp
-
-# Logs and debugging
-*.log
-*.trace
-
-# Package manager files
-*.nuget/
-packages/
-__pycache__/
+# ---------------------------------------------------------------------------
+# Node.js Tooling (book generation scripts)
+# ---------------------------------------------------------------------------
 node_modules/
+package-lock.json
+.npm/
 
-# Include Models and Assets
-!**/models/**/*.obj
-!**/models/*.obj
+# ---------------------------------------------------------------------------
+# Document Generation Artefacts
+# ---------------------------------------------------------------------------
+*.docx.bak
+*.tmp
+__pycache__/
+*.pyc
+
+# ---------------------------------------------------------------------------
+# Misc
+# ---------------------------------------------------------------------------
+*.log
+*.bak
+*.orig
+*.rej
+.env
+.env.*
