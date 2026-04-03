@@ -1,20 +1,14 @@
 <p align="center">
-  <strong>🍫</strong>
+  <img src="docs/logo/dc_logo.svg" alt="Dark Chocolate" width="480"/>
 </p>
-
-<h1 align="center">Dark Chocolate</h1>
-
-<p align="center">
-  <em>A cross-platform graphics engine built from scratch in C++20, targeting five GPU backends.</em>
-</p>
-
+ 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/C%2B%2B-20-blue?logo=cplusplus" alt="C++20"/></a>
   <a href="#"><img src="https://img.shields.io/badge/CMake-3.25%2B-064F8C?logo=cmake" alt="CMake 3.25+"/></a>
   <a href="#"><img src="https://img.shields.io/badge/Backends-5-4B2E0E" alt="5 Backends"/></a>
   <a href="#"><img src="https://img.shields.io/badge/License-Proprietary-red" alt="License"/></a>
 </p>
-
+ 
 ---
 
 ## What Is This?
