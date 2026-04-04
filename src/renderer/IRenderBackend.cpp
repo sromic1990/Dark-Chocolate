@@ -53,7 +53,7 @@ namespace DC
 			DC_CORE_WARN("OpenGL backend not yet implemented.");
 			return nullptr;
 		default:
-			DC_CORE_ERROR("Unknown Backend type");
+			DC_CORE_ERROR("Unknown backend type");
 			return nullptr;
 		}
 	}
