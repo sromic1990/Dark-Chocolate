@@ -9,8 +9,14 @@ namespace DC
 	class LayerStack
 	{
 	public:
-		LayerStack() = default;
-		~LayerStack() = default;
+		LayerStack()								= default;
+		~LayerStack()								= default;
+
+		LayerStack(LayerStack&&)					= default;
+		LayerStack& operator=(LayerStack&&)			= default;
+
+		LayerStack(const LayerStack&)				= delete;
+		LayerStack& operator=(const LayerStack&)	= delete;
 
 		void PushLayer(std::unique_ptr<Layer> layer);
 		std::unique_ptr<Layer> PopLayer(Layer* layer);
