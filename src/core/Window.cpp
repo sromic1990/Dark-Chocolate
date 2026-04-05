@@ -90,12 +90,12 @@ namespace DC
 		glfwSwapBuffers(m_Window);
 	}
 
-	bool Window::shouldClose() const
+	bool Window::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_Window) != 0;
 	}
 
-	void Window::setVSync(bool enabled)
+	void Window::SetVSync(bool enabled)
 	{
 		glfwSwapInterval(enabled ? 1 : 0);
 	}

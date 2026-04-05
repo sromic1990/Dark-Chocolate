@@ -40,8 +40,8 @@ namespace DC
 		void* GetNativeHandle() const;
 		void SetResizeCallback(ResizeCallback cb) { m_data.OnResize = std::move(cb); }
 		void SetCloseCallback(CloseCallback cb) { m_data.OnClose = std::move(cb); }
-		bool shouldClose() const;
-		void setVSync(bool enabled);
+		bool ShouldClose() const;
+		void SetVSync(bool enabled);
 
 	private:
 		void Init(const WindowProps& props);
