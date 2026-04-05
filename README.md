@@ -10,6 +10,7 @@
 </p>
  
 ---
+![CI](https://github.com/sromic1990/DarkChocolate/actions/workflows/ci.yml/badge.svg)
 
 ## What Is This?
 
