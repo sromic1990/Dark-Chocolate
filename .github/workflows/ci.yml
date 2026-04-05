@@ -50,6 +50,11 @@ jobs:
           ~/.cmake
         key: linux-cmake-deps-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: linux-cmake-deps-
+          
+    - name: Install CMake 4.2
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 4.2.0
 
 
     - name: Configure
@@ -106,6 +111,10 @@ jobs:
         key: windows-cmake-deps-${{ hashFiles('CMakeLists.txt') }}
         restore-keys: windows-cmake-deps-
 
+    - name: Install CMake 4.2
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 4.2.0
 
     - name: Configure
       run: |
