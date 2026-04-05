@@ -1,8 +1,8 @@
 // tests/test_rendercommand.cpp
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
-#include <Renderer/IRenderBackend.h>
-#include <Renderer/RenderCommand.h>
+#include <renderer/IRenderBackend.h>
+#include <renderer/RenderCommand.h>
 
 // SpyBackend: records every call so tests can verify forwarding.
 // No mocking framework needed. Each counter starts at 0.
@@ -89,6 +89,9 @@ TEST_CASE("DrawTriangle delegates to backend", "[rendercommand]")
 
 TEST_CASE("Null backend: all calls are safe no-ops", "[rendercommand]") 
 {
+	// Save current backend so it can be restored after this test.
+	// Use a local fixture to ensure cleanup even on test failure.
+	RenderCommandFixture guard;
 	DC::RenderCommand::Init(nullptr);
 	REQUIRE_NOTHROW(DC::RenderCommand::BeginFrame({}));
 	REQUIRE_NOTHROW(DC::RenderCommand::EndFrame());

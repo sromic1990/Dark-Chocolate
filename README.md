@@ -46,8 +46,12 @@ main() / EntryPoint.cpp
 These rules apply to every file in the repository, no exceptions:
 
 - **`namespace DC{}`** — all engine code lives here. (Except `.mm` files — no `namespace DC` in Objective-C++ sources.)
-- **`Result<T,E>`** — all fallible functions return this. No `std::optional` for errors, no error codes, no exceptions for control flow. `[[nodiscard]]` on every `Init()`, `Load()`, and `Create()`.
+- **Backend abstraction boundary** — code above `IRenderBackend` must not include platform GPU headers. No `<d3d12.h>`, no `<vulkan/vulkan.h>`, no `<Metal/Metal.h>` above `src/renderer/Backends/`.
 - **Five backends** — every feature ships on all five. If hardware support is optional, there's a fallback path.
+
+### Planned Architectural Goals (not yet repo-wide invariants)
+
+- **`Result<T,E>`** — migrate fallible APIs toward an explicit result type with `[[nodiscard]]` on operations such as `Init()`, `Load()`, and `Create()`. The current codebase still contains exception-based error handling in some areas (e.g., `Window`/`Application` throw `std::runtime_error`).
 
 ---
 

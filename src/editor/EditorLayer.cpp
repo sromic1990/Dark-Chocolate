@@ -1,7 +1,8 @@
 // src/Editor/EditorLayer.cpp
-#include "Editor/EditorLayer.h"
-#include "Core/Application.h"
-#include "Renderer/RenderCommand.h"
+#include "editor/EditorLayer.h"
+#include "core/Application.h"
+#include "renderer/RenderCommand.h"
+#include <cstring>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -165,9 +166,9 @@ namespace DC
 			ImGuiTreeNodeFlags flags =
 				ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_SpanAvailWidth;
 			if (m_SelectedEntity == entity.get()) flags |= ImGuiTreeNodeFlags_Selected;
-			ImGui::TreeNodeEx(name.c_str(), flags);
+			bool open = ImGui::TreeNodeEx(name.c_str(), flags);
 			if (ImGui::IsItemClicked()) m_SelectedEntity = entity.get();
-			ImGui::TreePop();
+			if (open) ImGui::TreePop();
 		}
 		if (ImGui::BeginPopupContextWindow("##HCtx", ImGuiPopupFlags_MouseButtonRight)) 
 		{
@@ -186,7 +187,9 @@ namespace DC
 		if (m_SelectedEntity && m_SelectedEntity->HasComponent<TagComponent>()) 
 		{
 			auto& tag = m_SelectedEntity->GetComponent<TagComponent>();
-			char buf[256]; strncpy(buf, tag.Tag.c_str(), sizeof(buf));
+			char buf[256];
+			strncpy(buf, tag.Tag.c_str(), sizeof(buf) - 1);
+			buf[sizeof(buf) - 1] = '\0';
 			if (ImGui::InputText("##Name", buf, sizeof(buf))) tag.Tag = buf;
 			ImGui::Separator();
 			if (m_SelectedEntity->HasComponent<TransformComponent>()) 

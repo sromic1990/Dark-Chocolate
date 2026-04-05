@@ -1,6 +1,6 @@
 // tests/test_application.cpp
 #include <catch2/catch_test_macros.hpp>
-#include "Core/Application.h"
+#include "core/Application.h"
 
 // ApplicationSpec defaults must watch documented values.
 TEST_CASE("ApplicationSpec default values", "[application]")

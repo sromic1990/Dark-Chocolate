@@ -1,8 +1,8 @@
 // tests/test_entity.cpp
 #include <catch2/catch_test_macros.hpp>
 #include "catch2/catch_approx.hpp"
-#include "Scene/Entity.h"
-#include "Scene/Components.h"
+#include "scene/Entity.h"
+#include "scene/Components.h"
 
 TEST_CASE("Named entity has TagComponent with correct name", "[entity]")
 {
@@ -11,7 +11,7 @@ TEST_CASE("Named entity has TagComponent with correct name", "[entity]")
 	REQUIRE(entity.GetComponent<DC::TagComponent>().Tag == "Player");
 }
 
-TEST_CASE("Named entity has TransfomComponent by default", "[entity]")
+TEST_CASE("Named entity has TransformComponent by default", "[entity]")
 {
 	DC::Entity entity("Player");
 	REQUIRE(entity.HasComponent<DC::TransformComponent>());

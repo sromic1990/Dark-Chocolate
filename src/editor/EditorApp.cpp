@@ -1,6 +1,6 @@
 // src/Editor/EditorApp.cpp
-#include "Core/Application.h"
-#include "Editor/EditorLayer.h"
+#include "core/Application.h"
+#include "editor/EditorLayer.h"
 
 namespace DC
 {

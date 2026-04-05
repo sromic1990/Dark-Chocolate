@@ -1,6 +1,6 @@
 // src/Scene/Entity.h
 #pragma once
-#include "Scene/Components.h"
+#include "scene/Components.h"
 #include <unordered_map>
 #include <typeindex>
 #include <any>

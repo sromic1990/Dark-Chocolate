@@ -2,14 +2,14 @@
 
 
 add_library(DarkChocolateCore STATIC
-    Core/Application.cpp
-    Core/Window.cpp
-    Core/LayerStack.cpp
-    Core/Log.cpp
-    Renderer/IRenderBackend.cpp
-    Renderer/RenderCommand.cpp
-    Scene/Scene.cpp
-    Editor/EditorLayer.cpp)
+    core/Application.cpp
+    core/Window.cpp
+    core/LayerStack.cpp
+    core/Log.cpp
+    renderer/IRenderBackend.cpp
+    renderer/RenderCommand.cpp
+    scene/Scene.cpp
+    editor/EditorLayer.cpp)
 
 
 # PUBLIC: visible to DarkChocolateCore AND to any target linking it.
@@ -30,7 +30,7 @@ endif()
 
 target_compile_definitions(DarkChocolateCore PUBLIC GLM_ENABLE_EXPERIMENTAL)
 
-add_executable(DarkChocolate Core/EntryPoint.cpp Editor/EditorApp.cpp)
+add_executable(DarkChocolate core/EntryPoint.cpp editor/EditorApp.cpp)
 target_link_libraries(DarkChocolate PRIVATE DarkChocolateCore)
 
 
