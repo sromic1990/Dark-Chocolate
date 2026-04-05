@@ -1,6 +1,7 @@
 // src/Core/LayerStack.cpp
-#include "Core/LayerStack.h"
-#include "Core/Log.h"
+#include <algorithm>
+#include "core/LayerStack.h"
+#include "core/Log.h"
 
 namespace DC
 {
@@ -25,6 +26,13 @@ namespace DC
 		auto owned = std::move(*it);
 		m_Layers.erase(it);
 		return owned;
+	}
+
+	void LayerStack::Clear()
+	{
+		for (auto it = m_Layers.rbegin(); it != m_Layers.rend(); ++it)
+			(*it)->OnDetach();
+		m_Layers.clear();
 	}
 
 	void LayerStack::UpdateAll(float delta)

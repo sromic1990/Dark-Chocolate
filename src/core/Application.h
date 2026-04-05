@@ -1,9 +1,9 @@
 // src/Application.h
 #pragma once
-#include "Core/Window.h"
-#include "Core/LayerStack.h"
-#include "Renderer/IRenderBackend.h"
-#include "Renderer/RenderCommand.h"
+#include "core/Window.h"
+#include "core/LayerStack.h"
+#include "renderer/IRenderBackend.h"
+#include "renderer/RenderCommand.h"
 #include <memory>
 #include <string>
 

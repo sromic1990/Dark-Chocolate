@@ -6,7 +6,7 @@
 #include <catch2/reporters/catch_reporter_event_listener.hpp>
 #include <catch2/reporters/catch_reporter_registrars.hpp>
 #include <spdlog/spdlog.h>
-#include "Core/Log.h"
+#include "core/Log.h"
 
 struct DCTestsListener : Catch::EventListenerBase
 {

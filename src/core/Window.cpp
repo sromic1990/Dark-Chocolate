@@ -1,6 +1,6 @@
 // src/core/Window.cpp
-#include "Core/Window.h"
-#include "Core/Log.h"
+#include "core/Window.h"
+#include "core/Log.h"
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
@@ -32,7 +32,7 @@ namespace DC
 			}
 		}
 
-#ifdef DC_PLATFORM_MACROS
+#ifdef DC_PLATFORM_MACOS
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

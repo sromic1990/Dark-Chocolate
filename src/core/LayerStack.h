@@ -1,6 +1,6 @@
 // src/Core/LayerStack.h
 #pragma once
-#include "Core/Layer.h"
+#include "core/Layer.h"
 #include <vector>
 #include <memory>
 
@@ -20,6 +20,7 @@ namespace DC
 
 		void PushLayer(std::unique_ptr<Layer> layer);
 		std::unique_ptr<Layer> PopLayer(Layer* layer);
+		void Clear();
 		void UpdateAll(float delta);
 		void RenderImGuiAll();
 

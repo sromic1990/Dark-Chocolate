@@ -1,5 +1,5 @@
 // src/Renderer/RenderCommand.cpp
-#include "Renderer/RenderCommand.h"
+#include "renderer/RenderCommand.h"
 
 namespace DC
 {

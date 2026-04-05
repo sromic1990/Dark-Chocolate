@@ -1,6 +1,6 @@
 // src/Core/Application.cpp
-#include "Core/Application.h"
-#include "Core/Log.h"
+#include "core/Application.h"
+#include "core/Log.h"
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
@@ -47,7 +47,7 @@ namespace DC
 	Application::~Application()
 	{
 		DC_CORE_INFO("Application shutting down");
-		m_LayerStack = LayerStack {};
+		m_LayerStack.Clear();
 		if (m_Backend) m_Backend->Shutdown();
 		s_Instance = nullptr;
 	}

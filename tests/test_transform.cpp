@@ -1,6 +1,6 @@
 // tests/test_transform.cpp
 #include <catch2/catch_test_macros.hpp>
-#include "Scene/Components.h"
+#include "scene/Components.h"
 #include <glm/glm.hpp>
 #include "catch2/catch_approx.hpp"
 

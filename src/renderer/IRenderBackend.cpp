@@ -1,16 +1,16 @@
 // src/Renderer/IRenderBackend.cpp
-#include "Renderer/IRenderBackend.h"
-#include "Core/Log.h"
+#include "renderer/IRenderBackend.h"
+#include "core/Log.h"
 
 // Uncomment as each backend is implemented
-// #include "Renderer/Backends/OpenGL/OpenGLBackend.h"
+// #include "renderer/Backends/OpenGL/OpenGLBackend.h"
 // #ifdef DC_PLATFORM_WINDOWS
-// #include "Renderer/Backends/DX11/DX11Backend.h"
-// #include "Renderer/Backends/DX12/DX12Backend.h"
+// #include "renderer/Backends/DX11/DX11Backend.h"
+// #include "renderer/Backends/DX12/DX12Backend.h"
 // #endif
-// #include "Renderer/Backends/Vulkan/VulkanBackend.h"
+// #include "renderer/Backends/Vulkan/VulkanBackend.h"
 // #ifdef DC_PLATFORM_MACOS
-// #include "Renderer/Backends/Metal/MetalBackend.h"
+// #include "renderer/Backends/Metal/MetalBackend.h"
 // #endif
 
 namespace DC
@@ -24,7 +24,7 @@ namespace DC
 			return nullptr;
 		case BackendType::DX11:
 #ifdef DC_PLATFORM_WINDOWS
-			DC_CORE_WARN("DX11 backend implemented.");
+			DC_CORE_WARN("DX11 backend not yet implemented.");
 			return nullptr;
 #else
 			DC_CORE_ERROR("DX11 backend is Windows-only.");
@@ -32,14 +32,14 @@ namespace DC
 #endif
 		case BackendType::DX12:
 #ifdef DC_PLATFORM_WINDOWS
-			DC_CORE_WARN("DX12 backend implemented.");
+			DC_CORE_WARN("DX12 backend not yet implemented.");
 			return nullptr;
 #else
 			DC_CORE_ERROR("DX12 backend is Windows-only.");
 			return nullptr;
 #endif
 		case BackendType::Vulkan:
-			DC_CORE_WARN("Vulkan backend implemented.");
+			DC_CORE_WARN("Vulkan backend not yet implemented.");
 			return nullptr;
 		case BackendType::Metal:
 #ifdef DC_PLATFORM_MACOS

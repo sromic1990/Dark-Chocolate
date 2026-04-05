@@ -7,7 +7,7 @@
 
 namespace DC
 {
-	// TagComponent: every entity has a name.Pure data struct.
+	// TagComponent: every entity has a name. Pure data struct.
 	struct TagComponent
 	{
 		std::string Tag;
@@ -44,7 +44,7 @@ namespace DC
 	};
 
 	// MeshRendererComponent: placeholder for now.
-	// Present non so the editor properties panel can check for it, and tests can verify add/remove behavior.
+	// Present now so the editor properties panel can check for it, and tests can verify add/remove behavior.
 	struct MeshRendererComponent
 	{
 		std::string MeshPath;

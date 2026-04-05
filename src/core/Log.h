@@ -1,5 +1,5 @@
 // src/core/Log.h
-// Wraps spdlog in a thin static class so the rest of the enghine never directly touches spdlog API calls
+// Wraps spdlog in a thin static class so the rest of the engine never directly touches spdlog API calls
 // If we want to swap out spdlog for another logging library, we only have to change this file.
 
 #pragma once

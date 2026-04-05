@@ -49,7 +49,7 @@ namespace DC
 
 		GLFWwindow* m_Window = nullptr;
 
-		// WindowData is stired seperately because GLFW C callbacks receive only a GLFWwindow*.
+		// WindowData is stored separately because GLFW C callbacks receive only a GLFWwindow*.
 		// We store a pointer to this struct as the GLFW "user pointer", so callbacks can reach our C++ state 
 		// without exposing the full Window object.
 		// Minimum necessary data only.
