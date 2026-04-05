@@ -85,14 +85,14 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 
 | Deliverable | Status |
 |-------------|--------|
-| `Application` singleton, main loop, `LayerStack` push/pop | ⬜ |
-| `IRenderBackend` interface with factory (`Create(BackendType)`) | ⬜ |
-| `RenderCommand` static facade | ⬜ |
-| `Log` (spdlog), `Window` (GLFW), `FrameTimer` | ⬜ |
-| `Scene`, `Entity`, `TransformComponent` (initial ECS shell) | ⬜ |
-| `EditorLayer` with Dear ImGui docking | ⬜ |
-| GitHub Actions CI — Linux (ubuntu-24.04) + Windows (windows-2022) | ⬜ |
-| Catch2 test harness with `test_listener.cpp` | ⬜ |
+| `Application` singleton, main loop, `LayerStack` push/pop | ✅ |
+| `IRenderBackend` interface with factory (`Create(BackendType)`) | ✅ |
+| `RenderCommand` static facade | ✅ |
+| `Log` (spdlog), `Window` (GLFW), `FrameTimer` | ✅ |
+| `Scene`, `Entity`, `TransformComponent` (initial ECS shell) | ✅ |
+| `EditorLayer` with Dear ImGui docking | ✅ |
+| GitHub Actions CI — Linux (ubuntu-24.04) + Windows (windows-2022) | ✅ |
+| Catch2 test harness with `test_listener.cpp` | ✅ |
 
 ### OpenGL Backend
 
