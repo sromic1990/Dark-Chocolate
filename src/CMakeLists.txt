@@ -28,6 +28,7 @@ elseif(UNIX)
     target_compile_definitions(DarkChocolateCore PUBLIC DC_PLATFORM_LINUX)
 endif()
 
+target_compile_definitions(DarkChocolateCore PUBLIC GLM_ENABLE_EXPERIMENTAL)
 
 add_executable(DarkChocolate Core/EntryPoint.cpp Editor/EditorApp.cpp)
 target_link_libraries(DarkChocolate PRIVATE DarkChocolateCore)
