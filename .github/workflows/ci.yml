@@ -1,0 +1,158 @@
+# .github/workflows/ci.yml
+name: CI
+
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+
+# Cancel in-progress runs when a new commit is pushed to the same PR.
+# Prevents wasting CI minutes on stale commits.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+
+
+  # ── Linux build + test ───────────────────────────────────────────────
+  test-linux:
+    name: Linux (${{ matrix.build_type }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
+
+    steps:
+    - uses: actions/checkout@v4
+      with: { fetch-depth: 1 }
+
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build libgl-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev libwayland-dev wayland-protocols libxkbcommon-dev
+
+
+    - name: Cache CMake FetchContent downloads
+      uses: actions/cache@v4
+      with:
+        path: |
+          build/linux-ci/_deps
+          ~/.cmake
+        key: linux-cmake-deps-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: linux-cmake-deps-
+          
+    - name: Install CMake 4.2
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 4.2.0
+
+
+    - name: Configure
+      run: |
+        cmake -B build/linux-ci \
+          -G Ninja \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DDC_BUILD_TESTS=ON
+
+
+    - name: Build
+      run: cmake --build build/linux-ci --parallel
+
+
+    - name: Run tests
+      run: |
+        cd build/linux-ci
+        ctest --output-on-failure -C ${{ matrix.build_type }}
+
+
+    - name: Upload test results
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-linux-${{ matrix.build_type }}
+        path: build/linux-ci/Testing/
+
+
+  # ── Windows build + test ─────────────────────────────────────────────
+  test-windows:
+    name: Windows (${{ matrix.build_type }})
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
+
+    steps:
+    - uses: actions/checkout@v4
+      with: { fetch-depth: 1 }
+
+
+    - uses: ilammy/msvc-dev-cmd@v1
+
+
+    - uses: seanmiddleditch/gha-setup-ninja@v4
+
+
+    - name: Cache CMake FetchContent downloads
+      uses: actions/cache@v4
+      with:
+        path: build/windows-ci/_deps
+        key: windows-cmake-deps-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: windows-cmake-deps-
+
+    - name: Install CMake 4.2
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: 4.2.0
+
+    - name: Configure
+      run: |
+        cmake -B build/windows-ci `
+          -G Ninja `
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
+          -DDC_BUILD_TESTS=ON
+
+
+    - name: Build
+      run: cmake --build build/windows-ci --parallel
+
+
+    - name: Run tests
+      run: |
+        cd build/windows-ci
+        ctest --output-on-failure -C ${{ matrix.build_type }}
+
+
+    - name: Upload test results
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-windows-${{ matrix.build_type }}
+        path: build/windows-ci/Testing/
+
+
+  # ── All-pass gate ─────────────────────────────────────────────────────
+  all-tests-pass:
+    name: All Tests Pass
+    needs: [test-linux, test-windows]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+    - name: Check all jobs passed
+      run: |
+        if [ "${{ needs.test-linux.result }}" != "success" ] || \
+           [ "${{ needs.test-windows.result }}" != "success" ]; then
+          echo "One or more CI jobs failed."
+          exit 1
+        fi
+        echo "All CI jobs passed."
+

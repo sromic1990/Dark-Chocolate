@@ -1,0 +1,45 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 4, "minor": 2, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base", "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": { "CMAKE_CXX_STANDARD": "20", "DC_BUILD_TESTS": "ON" }
+    },
+    {
+      "name": "windows-vs",
+      "displayName": "Windows (Visual Studio)",
+      "inherits": "base",
+      "generator": "Visual Studio 18 2026",
+      "architecture": { "value": "x64", "strategy": "set" },
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "macos-debug",
+      "displayName": "macOS Debug",
+      "inherits": "base",
+      "generator": "Xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "linux-ci",
+      "displayName": "Linux CI",
+      "inherits": "base",
+      "generator": "Ninja",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "windows-debug",   "configurePreset": "windows-vs", "configuration": "Debug"   },
+    { "name": "windows-release", "configurePreset": "windows-vs", "configuration": "Release" },
+    { "name": "macos-debug",     "configurePreset": "macos-debug", "configuration": "Debug"  },
+    { "name": "linux-ci",        "configurePreset": "linux-ci" }
+  ],
+  "testPresets": [
+    { "name": "linux-ci", "configurePreset": "linux-ci",
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error", "stopOnFailure": false } }
+  ]
+}

@@ -1,0 +1,136 @@
+<svg width="100%" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<clipPath id="barClip">
+<rect x="190" y="40" width="300" height="280" rx="18"/>
+</clipPath>
+</defs>
+
+<style>
+.logo-bg { fill: #4B2E0E; }
+.logo-highlight { fill: #5E3A16; }
+.logo-shadow { fill: #3A2009; }
+.logo-groove { stroke: #3A2009; stroke-width: 2.5; fill: none; }
+.logo-groove-hi { stroke: #5E3A16; stroke-width: 1.2; fill: none; }
+.wire { stroke: #C8860A; stroke-width: 1.2; fill: none; opacity: 0.9; }
+.wire-fade { stroke: #C8860A; fill: none; }
+.vert { fill: #C8860A; }
+.vert-fade { fill: #C8860A; }
+.tri-fill { fill: #C8860A; opacity: 0.06; }
+.title-text { font-family: 'Georgia', 'Times New Roman', serif; fill: #4B2E0E; }
+.subtitle-text { font-family: 'Georgia', 'Times New Roman', serif; fill: #C8956B; }
+@media (prefers-color-scheme: dark) {
+  .title-text { fill: #FDF6EC; }
+  .subtitle-text { fill: #C8956B; }
+}
+</style>
+
+<g clip-path="url(#barClip)">
+  <rect x="190" y="40" width="300" height="280" rx="18" class="logo-bg"/>
+
+  <rect x="190" y="40" width="300" height="6" rx="0" fill="#5E3A16" opacity="0.5"/>
+  <rect x="190" y="314" width="300" height="6" rx="0" fill="#2E1805" opacity="0.5"/>
+
+  <rect x="198" y="50" width="86" height="82" rx="6" class="logo-highlight" opacity="0.35"/>
+  <rect x="297" y="50" width="86" height="82" rx="6" class="logo-highlight" opacity="0.35"/>
+  <rect x="396" y="50" width="86" height="82" rx="6" class="logo-highlight" opacity="0.35"/>
+  <rect x="198" y="145" width="86" height="82" rx="6" class="logo-highlight" opacity="0.35"/>
+  <rect x="297" y="145" width="86" height="82" rx="6" class="logo-highlight" opacity="0.35"/>
+  <rect x="396" y="145" width="86" height="82" rx="6" class="logo-highlight" opacity="0.35"/>
+
+  <line x1="289" y1="48" x2="289" y2="232" class="logo-groove"/>
+  <line x1="291" y1="48" x2="291" y2="232" class="logo-groove-hi"/>
+  <line x1="389" y1="48" x2="389" y2="232" class="logo-groove"/>
+  <line x1="391" y1="48" x2="391" y2="232" class="logo-groove-hi"/>
+  <line x1="196" y1="137" x2="484" y2="137" class="logo-groove"/>
+  <line x1="196" y1="139" x2="484" y2="139" class="logo-groove-hi"/>
+
+  <polygon points="198,232 244,232 221,260" class="tri-fill"/>
+  <polygon points="244,232 290,232 267,260" class="tri-fill"/>
+  <polygon points="290,232 336,232 313,260" class="tri-fill"/>
+  <polygon points="336,232 382,232 359,260" class="tri-fill"/>
+  <polygon points="382,232 428,232 405,260" class="tri-fill"/>
+  <polygon points="428,232 474,232 451,260" class="tri-fill"/>
+
+  <line x1="198" y1="232" x2="244" y2="232" class="wire"/>
+  <line x1="244" y1="232" x2="290" y2="232" class="wire"/>
+  <line x1="290" y1="232" x2="336" y2="232" class="wire"/>
+  <line x1="336" y1="232" x2="382" y2="232" class="wire"/>
+  <line x1="382" y1="232" x2="428" y2="232" class="wire"/>
+  <line x1="428" y1="232" x2="474" y2="232" class="wire"/>
+
+  <line x1="198" y1="232" x2="221" y2="260" class="wire"/>
+  <line x1="244" y1="232" x2="221" y2="260" class="wire"/>
+  <line x1="244" y1="232" x2="267" y2="260" class="wire"/>
+  <line x1="290" y1="232" x2="267" y2="260" class="wire"/>
+  <line x1="290" y1="232" x2="313" y2="260" class="wire"/>
+  <line x1="336" y1="232" x2="313" y2="260" class="wire"/>
+  <line x1="336" y1="232" x2="359" y2="260" class="wire"/>
+  <line x1="382" y1="232" x2="359" y2="260" class="wire"/>
+  <line x1="382" y1="232" x2="405" y2="260" class="wire"/>
+  <line x1="428" y1="232" x2="405" y2="260" class="wire"/>
+  <line x1="428" y1="232" x2="451" y2="260" class="wire"/>
+  <line x1="474" y1="232" x2="451" y2="260" class="wire"/>
+
+  <line x1="221" y1="260" x2="267" y2="260" class="wire" opacity="0.75"/>
+  <line x1="267" y1="260" x2="313" y2="260" class="wire" opacity="0.75"/>
+  <line x1="313" y1="260" x2="359" y2="260" class="wire" opacity="0.75"/>
+  <line x1="359" y1="260" x2="405" y2="260" class="wire" opacity="0.75"/>
+  <line x1="405" y1="260" x2="451" y2="260" class="wire" opacity="0.75"/>
+
+  <line x1="221" y1="260" x2="244" y2="288" class="wire" opacity="0.55"/>
+  <line x1="267" y1="260" x2="244" y2="288" class="wire" opacity="0.55"/>
+  <line x1="267" y1="260" x2="290" y2="288" class="wire" opacity="0.55"/>
+  <line x1="313" y1="260" x2="290" y2="288" class="wire" opacity="0.55"/>
+  <line x1="313" y1="260" x2="336" y2="288" class="wire" opacity="0.55"/>
+  <line x1="359" y1="260" x2="336" y2="288" class="wire" opacity="0.55"/>
+  <line x1="359" y1="260" x2="382" y2="288" class="wire" opacity="0.55"/>
+  <line x1="405" y1="260" x2="382" y2="288" class="wire" opacity="0.55"/>
+  <line x1="405" y1="260" x2="428" y2="288" class="wire" opacity="0.55"/>
+  <line x1="451" y1="260" x2="428" y2="288" class="wire" opacity="0.55"/>
+
+  <line x1="244" y1="288" x2="290" y2="288" class="wire-fade" stroke-width="1" opacity="0.35"/>
+  <line x1="290" y1="288" x2="336" y2="288" class="wire-fade" stroke-width="1" opacity="0.35"/>
+  <line x1="336" y1="288" x2="382" y2="288" class="wire-fade" stroke-width="1" opacity="0.35"/>
+  <line x1="382" y1="288" x2="428" y2="288" class="wire-fade" stroke-width="1" opacity="0.35"/>
+
+  <line x1="244" y1="288" x2="267" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="290" y1="288" x2="267" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="290" y1="288" x2="313" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="336" y1="288" x2="313" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="336" y1="288" x2="359" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="382" y1="288" x2="359" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="382" y1="288" x2="405" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+  <line x1="428" y1="288" x2="405" y2="316" class="wire-fade" stroke-width="0.8" opacity="0.2"/>
+
+  <circle cx="198" cy="232" r="2.5" class="vert"/>
+  <circle cx="244" cy="232" r="2.5" class="vert"/>
+  <circle cx="290" cy="232" r="2.5" class="vert"/>
+  <circle cx="336" cy="232" r="2.5" class="vert"/>
+  <circle cx="382" cy="232" r="2.5" class="vert"/>
+  <circle cx="428" cy="232" r="2.5" class="vert"/>
+  <circle cx="474" cy="232" r="2.5" class="vert"/>
+  <circle cx="221" cy="260" r="2.2" class="vert" opacity="0.8"/>
+  <circle cx="267" cy="260" r="2.2" class="vert" opacity="0.8"/>
+  <circle cx="313" cy="260" r="2.2" class="vert" opacity="0.8"/>
+  <circle cx="359" cy="260" r="2.2" class="vert" opacity="0.8"/>
+  <circle cx="405" cy="260" r="2.2" class="vert" opacity="0.8"/>
+  <circle cx="451" cy="260" r="2.2" class="vert" opacity="0.8"/>
+  <circle cx="244" cy="288" r="1.8" class="vert-fade" opacity="0.5"/>
+  <circle cx="290" cy="288" r="1.8" class="vert-fade" opacity="0.5"/>
+  <circle cx="336" cy="288" r="1.8" class="vert-fade" opacity="0.5"/>
+  <circle cx="382" cy="288" r="1.8" class="vert-fade" opacity="0.5"/>
+  <circle cx="428" cy="288" r="1.8" class="vert-fade" opacity="0.5"/>
+  <circle cx="267" cy="316" r="1.4" class="vert-fade" opacity="0.25"/>
+  <circle cx="313" cy="316" r="1.4" class="vert-fade" opacity="0.25"/>
+  <circle cx="359" cy="316" r="1.4" class="vert-fade" opacity="0.25"/>
+  <circle cx="405" cy="316" r="1.4" class="vert-fade" opacity="0.25"/>
+</g>
+
+<rect x="190" y="40" width="300" height="280" rx="18" fill="none" stroke="#3A2009" stroke-width="2"/>
+
+<text x="340" y="380" text-anchor="middle" class="title-text" font-size="36" font-weight="400" letter-spacing="6">DARK CHOCOLATE</text>
+<line x1="240" y1="398" x2="440" y2="398" stroke="#C8860A" stroke-width="1" opacity="0.6"/>
+<text x="340" y="425" text-anchor="middle" class="subtitle-text" font-size="14" letter-spacing="3">A GRAPHICS PROGRAMMING JOURNEY</text>
+<text x="340" y="465" text-anchor="middle" class="subtitle-text" font-size="11" letter-spacing="2" opacity="0.7">SOURAV CHATTERJEE · GRAPHICS ENGINEER</text>
+
+</svg>
