@@ -1,5 +1,5 @@
 // src/Renderer/RenderCommand.h
-#pragma once;
+#pragma once
 #include "Renderer/IRenderBackend.h"
 
 namespace DC
