@@ -1,0 +1,52 @@
+name: Check case-colliding paths
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  check-case-collisions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect case-colliding tracked paths
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "Scanning tracked files for case-colliding paths..."
+
+          collisions=$(
+            git ls-files |
+            awk '
+              {
+                lower = tolower($0)
+                paths[lower] = paths[lower] ? paths[lower] "\n" $0 : $0
+                count[lower]++
+              }
+              END {
+                found = 0
+                for (key in count) {
+                  if (count[key] > 1) {
+                    found = 1
+                    print "Case collision detected:"
+                    print paths[key]
+                    print ""
+                  }
+                }
+                if (found) exit 1
+              }
+            '
+          ) || {
+            echo "$collisions"
+            echo "Repository contains paths that differ only by case."
+            exit 1
+          }
+
+          echo "No case-colliding tracked paths found."
