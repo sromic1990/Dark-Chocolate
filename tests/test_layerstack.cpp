@@ -1,7 +1,7 @@
 // tests/test_layerstack.cpp
 #include <catch2/catch_test_macros.hpp>
-#include "core/Layer.h"
-#include "core/LayerStack.h"
+#include "Core/Layer.h"
+#include "Core/LayerStack.h"
 #include <vector>
 #include <string>
 

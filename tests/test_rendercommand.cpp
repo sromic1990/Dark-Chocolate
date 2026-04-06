@@ -1,8 +1,8 @@
 // tests/test_rendercommand.cpp
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
-#include <renderer/IRenderBackend.h>
-#include <renderer/RenderCommand.h>
+#include "Renderer/IRenderBackend.h"
+#include "Renderer/RenderCommand.h"
 
 // SpyBackend: records every call so tests can verify forwarding.
 // No mocking framework needed. Each counter starts at 0.

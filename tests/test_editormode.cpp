@@ -1,6 +1,6 @@
 // tests/test_editormode.cpp
 #include <catch2/catch_test_macros.hpp>
-#include "editor/EditorLayer.h"
+#include "Editor/EditorLayer.h"
 
 
 TEST_CASE("Edit and Play modes are distinct", "[editormode]") 
