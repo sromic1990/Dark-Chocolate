@@ -22,7 +22,12 @@ namespace DC
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		// Load a font at a readable size
+		ImFontConfig cfg;
+		cfg.SizePixels = 18.0f;
+		io.Fonts->AddFontDefault(&cfg);
 
 		ImGui::StyleColorsDark();
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -74,19 +79,21 @@ namespace DC
 		// Full-screen DockSpace: the invisible table the editor layout sits on.
 		// Without it, ImGuiConfigFlags_DockingEnable has no visible effect.
 		{
+			float toolbarHeight = 40.0f;
+
 			ImGuiWindowFlags flags =
 				ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking |
 				ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
 				ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
 				ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 			const ImGuiViewport* vp = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(vp->WorkPos);
-			ImGui::SetNextWindowSize(vp->WorkSize);
+			ImGui::SetNextWindowPos(ImVec2(vp->WorkPos.x, vp->WorkPos.y + toolbarHeight));
+			ImGui::SetNextWindowSize(ImVec2(vp->WorkSize.x, vp->WorkSize.y - toolbarHeight));
 			ImGui::SetNextWindowViewport(vp->ID);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 			ImGui::Begin("DockSpace", nullptr, flags);
 			ImGui::PopStyleVar();
-			ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0),
+			ImGuiID dockId = ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0),
 				ImGuiDockNodeFlags_PassthruCentralNode);
 			DrawMenuBar();
 			ImGui::End();
@@ -101,13 +108,13 @@ namespace DC
 
 
 		// Multi-viewport: save/restore GL context around platform window render.
-		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) 
+		/*if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) 
 		{
 			GLFWwindow* backup = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup);
-		}
+		}*/
 
 
 	}
@@ -137,24 +144,40 @@ namespace DC
 
 	void EditorLayer::DrawToolbar()
 	{
-		ImGui::Begin("##Toolbar", nullptr,
-			ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar);
-		float sz = ImGui::GetWindowHeight() - 8.0f;
-		ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - sz * 2.5f) / 2.0f);
+		const ImGuiViewport* vp = ImGui::GetMainViewport();
+		float toolbarHeight = 40.0f;
+
+		ImGui::SetNextWindowPos(ImVec2(vp->WorkPos.x, vp->WorkPos.y));
+		ImGui::SetNextWindowSize(ImVec2(vp->WorkSize.x, toolbarHeight));
+
+		ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration |
+			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoMove;
+
+		ImGui::Begin("##Toolbar", nullptr, flags);
+
+		float btnSize = 28.0f;
+		ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - btnSize * 2.5f) / 2.0f);
+		float availY = ImGui::GetContentRegionAvail().y;
+		if (availY > btnSize)
+			ImGui::SetCursorPosY((availY - btnSize) / 2.0f);
+
 		ImGui::PushStyleColor(ImGuiCol_Button,
 			m_Mode == EditorMode::Play
 			? ImVec4(0.1f, 0.7f, 0.1f, 1.0f)
 			: ImVec4(0.2f, 0.5f, 0.2f, 0.8f));
-		if (ImGui::Button(m_Mode == EditorMode::Edit ? " > " : " || ", ImVec2(sz, sz)))
+		if (ImGui::Button(m_Mode == EditorMode::Edit ? ">" : "||", ImVec2(btnSize, btnSize)))
 			m_Mode == EditorMode::Edit ? OnPlay() : OnStop();
 		ImGui::PopStyleColor();
+
 		ImGui::SameLine();
+
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.7f, 0.1f, 0.1f, 0.8f));
-		if (ImGui::Button(" [] ", ImVec2(sz, sz)) && m_Mode == EditorMode::Play) OnStop();
+		if (ImGui::Button("[]", ImVec2(btnSize, btnSize)) && m_Mode == EditorMode::Play)
+			OnStop();
 		ImGui::PopStyleColor();
+
 		ImGui::End();
-
-
 	}
 
 	void EditorLayer::DrawSceneHierarchy()
@@ -177,8 +200,6 @@ namespace DC
 			ImGui::EndPopup();
 		}
 		ImGui::End();
-
-
 	}
 
 	void EditorLayer::DrawProperties()
@@ -227,9 +248,19 @@ namespace DC
 	{
 		ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration |
 			ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing |
-			ImGuiWindowFlags_NoNav;
+			ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDocking |
+			ImGuiWindowFlags_NoMove;  // prevent dragging
+
+		const float padding = 10.0f;
+		const ImGuiViewport* vp = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(
+			ImVec2(vp->WorkPos.x + vp->WorkSize.x - padding,
+				vp->WorkPos.y + 40.0f + padding),
+			ImGuiCond_Always,
+			ImVec2(1.0f, 0.0f));  // anchor top-right corner
 		ImGui::SetNextWindowBgAlpha(0.70f);
-		if (ImGui::Begin("##Stats", nullptr, flags)) 
+
+		if (ImGui::Begin("##Stats", nullptr, flags))
 		{
 			ImGui::Text("FPS: %.1f (%.3f ms)",
 				m_DeltaTime > 0.0f ? 1.0f / m_DeltaTime : 0.0f, m_DeltaTime * 1000.0f);
@@ -237,8 +268,6 @@ namespace DC
 			ImGui::Text("Backend: %s", RenderCommand::GetBackendName().c_str());
 		}
 		ImGui::End();
-
-
 	}
 
 	void EditorLayer::OnPlay()
