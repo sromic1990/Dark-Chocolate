@@ -1,8 +1,8 @@
 // src/Editor/EditorLayer.h
 #pragma once
-#include "core/Layer.h"
-#include "scene/Scene.h"
-#include "scene/Entity.h"
+#include "Core/Layer.h"
+#include "Scene/Scene.h"
+#include "Scene/Entity.h"
 #include <memory>
 
 namespace DC

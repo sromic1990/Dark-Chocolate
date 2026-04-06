@@ -1,6 +1,6 @@
-// src/core/Window.cpp
-#include "core/Window.h"
-#include "core/Log.h"
+// src/Core/Window.cpp
+#include "Core/Window.h"
+#include "Core/Log.h"
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 

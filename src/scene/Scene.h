@@ -1,6 +1,6 @@
 // src/Scene/Scene.h
 #pragma once
-#include "scene/Entity.h"
+#include "Scene/Entity.h"
 #include <vector>
 #include <memory>
 #include <string>

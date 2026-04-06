@@ -1,7 +1,7 @@
 // src/Core/LayerStack.cpp
 #include <algorithm>
-#include "core/LayerStack.h"
-#include "core/Log.h"
+#include "Core/LayerStack.h"
+#include "Core/Log.h"
 
 namespace DC
 {

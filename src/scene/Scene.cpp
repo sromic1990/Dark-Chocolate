@@ -1,5 +1,5 @@
 // src/Scene/Scene.cpp
-#include "scene/Scene.h"
+#include "Scene/Scene.h"
 
 namespace DC
 {

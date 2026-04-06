@@ -1,4 +1,4 @@
-// src/core/Log.cpp
+// src/Core/Log.cpp
 #include "Log.h"
 
 namespace DC

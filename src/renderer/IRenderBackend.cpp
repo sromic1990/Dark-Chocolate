@@ -1,6 +1,6 @@
 // src/Renderer/IRenderBackend.cpp
-#include "renderer/IRenderBackend.h"
-#include "core/Log.h"
+#include "Renderer/IRenderBackend.h"
+#include "Core/Log.h"
 
 // Uncomment as each backend is implemented
 // #include "renderer/Backends/OpenGL/OpenGLBackend.h"

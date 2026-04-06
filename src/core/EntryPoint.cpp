@@ -1,6 +1,6 @@
 // src/Core/EntryPoint.cpp
-#include "core/Application.h"
-#include "core/Log.h"
+#include "Core/Application.h"
+#include "Core/Log.h"
 
 extern DC::Application* DC::CreateApplication();
 

@@ -1,6 +1,6 @@
 // src/Core/LayerStack.h
 #pragma once
-#include "core/Layer.h"
+#include "Core/Layer.h"
 #include <vector>
 #include <memory>
 

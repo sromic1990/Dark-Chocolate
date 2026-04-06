@@ -1,6 +1,6 @@
 // src/Core/Application.cpp
-#include "core/Application.h"
-#include "core/Log.h"
+#include "Core/Application.h"
+#include "Core/Log.h"
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 

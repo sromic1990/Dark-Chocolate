@@ -1,9 +1,9 @@
 // src/Editor/EditorLayer.cpp
-#include "editor/EditorLayer.h"
-#include "core/Application.h"
-#include "renderer/RenderCommand.h"
-#include <cstring>
+#include "Editor/EditorLayer.h"
+#include "Core/Application.h"
+#include "Renderer/RenderCommand.h"
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>

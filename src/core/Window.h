@@ -1,4 +1,4 @@
-// src/core/Window.h
+// src/Core/Window.h
 #pragma once
 #include <string>
 #include <functional>
