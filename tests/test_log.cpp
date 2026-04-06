@@ -1,6 +1,6 @@
 // tests/test_log.cpp
 #include <catch2/catch_test_macros.hpp>
-#include "core/Log.h"
+#include "Core/Log.h"
 
 // After the session listener runs, Init() has already been called.
 // Calling it again must be safe (spdlog returns existing loggers).

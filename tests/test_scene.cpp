@@ -1,6 +1,6 @@
 // tests/test_scene.cpp
 #include <catch2/catch_test_macros.hpp>
-#include <scene/Scene.h>
+#include "Scene/Scene.h"
 
 TEST_CASE("New scene is empty", "[scene]")
 {

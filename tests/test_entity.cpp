@@ -1,8 +1,8 @@
 // tests/test_entity.cpp
 #include <catch2/catch_test_macros.hpp>
 #include "catch2/catch_approx.hpp"
-#include "scene/Entity.h"
-#include "scene/Components.h"
+#include "Scene/Entity.h"
+#include "Scene/Components.h"
 
 TEST_CASE("Named entity has TagComponent with correct name", "[entity]")
 {
