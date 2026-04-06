@@ -12,6 +12,7 @@ set(DC_TEST_SOURCES
     test_scene.cpp
     test_transform.cpp
     test_editormode.cpp
+    test_opengl_unit.cpp
 )
 
 
@@ -26,6 +27,5 @@ target_link_libraries(DarkChocolateTests PRIVATE
 # Register with CTest. catch_discover_tests finds all TEST_CASEs
 # in the binary and registers them individually with CTest.
 # "cmake --build . --target test" runs all of them.
-catch_discover_tests(DarkChocolateTests
-    PROPERTIES TIMEOUT 30)   # 30-second per-test time limit
+catch_discover_tests(DarkChocolateTests PROPERTIES TIMEOUT 30)   # 30-second per-test time limit
 
