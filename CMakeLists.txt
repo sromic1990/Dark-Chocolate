@@ -17,6 +17,9 @@ option(DC_BUILD_TESTS "Build the Dark Chocolate unit tests" ON)
 
 include(FetchContent)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
+cmake_policy(SET CMP0074 NEW)
+
 # GLFW 3.4
 FetchContent_Declare(glfw
     GIT_REPOSITORY https://github.com/glfw/glfw.git
@@ -50,6 +53,7 @@ FetchContent_Declare(imgui
     GIT_TAG docking  
     GIT_SHALLOW TRUE
 )
+
 FetchContent_MakeAvailable(imgui)
 add_library(imgui STATIC
     ${imgui_SOURCE_DIR}/imgui.cpp
@@ -84,5 +88,28 @@ if(DC_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
+# GLAD v0.1.36: OpenGL function loader.
+# Profile "core" = no deprecated functions.
+# API "gl=4.1" = OpenGL 4.1 (macOS hard cap, also consistent across platforms).
+FetchContent_Declare(GLAD
+    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+    GIT_TAG v0.1.36
+    GIT_SHALLOW TRUE
+    CMAKE_ARGS -Wno-dev
+)
+set(GLAD_PROFILE "core" CACHE STRING "" FORCE)
+set(GLAD_API "gl=4.1" CACHE STRING "" FORCE)
+set(GLAD_GENERATOR "c" CACHE STRING "" FORCE)
+set(GLAD_EXTENSIONS "" CACHE STRING "" FORCE)
+FetchContent_MakeAvailable(glad)
 
+# Integration test option. OFF by default
+# Requires a display or Mesa software renderer.
+# Enabled in the integration-test CI job. Never in headless unit-test CI.
+option(DC_BUILD_INTEGRATION_TESTS
+    "Build integration tests(require OpenGL context)" OFF)
+
+if(DC_BUILD_INTEGRATION_TESTS)
+    add_subdirectory(tests/integration)
+endif()
 

@@ -8,16 +8,21 @@ add_library(DarkChocolateCore STATIC
     Core/Log.cpp
     Renderer/IRenderBackend.cpp
     Renderer/RenderCommand.cpp
+    Renderer/Backends/OpenGL/GLBuffer.cpp
+    Renderer/Backends/OpenGL/GLVertexArray.cpp
+    Renderer/Backends/OpenGL/GLShader.cpp
+    Renderer/Backends/OpenGL/OpenGLBackend.cpp
     Scene/Scene.cpp
-    Editor/EditorLayer.cpp)
+    Editor/EditorLayer.cpp
+    Editor/TriangleDemoLayer.cpp)
 
 
 # PUBLIC: visible to DarkChocolateCore AND to any target linking it.
-target_include_directories(DarkChocolateCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(DarkChocolateCore PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR})
 
-
-target_link_libraries(DarkChocolateCore PUBLIC glfw glm::glm spdlog::spdlog imgui)
-
+target_link_libraries(DarkChocolateCore PUBLIC 
+    glfw glm::glm spdlog::spdlog imgui glad OpenGL::GL)
 
 # Platform compile definitions.
 if(WIN32)
