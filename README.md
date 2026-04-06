@@ -69,6 +69,103 @@ Platform defaults: **Windows → DX12**, **macOS → Metal**, **Linux → Vulkan
 
 ---
 
+## Building
+
+### Prerequisites
+
+- **CMake 4.2+** (Ninja required on Linux; Windows and macOS use IDE generators)
+- **C++20 compiler:** MSVC 2026+ (Visual Studio 18), Clang 15+, or GCC 13+
+- **Platform SDK** for your target backend(s)
+
+### Quick Start
+
+```bash
+git clone <repo-url>
+cd dark-chocolate
+
+# Pick your preset
+cmake --preset windows-vs         # Windows (Visual Studio 18 2026, x64)
+cmake --preset macos-debug        # macOS (Xcode)
+cmake --preset linux-ci           # Linux (Ninja, Release)
+
+cmake --build --preset windows-debug    # Debug build
+cmake --build --preset windows-release  # Release build
+cmake --build --preset macos-debug
+cmake --build --preset linux-ci
+```
+
+### Running Tests
+
+```bash
+cd build/<preset>
+ctest -C Debug --output-on-failure     # or -C Release
+```
+
+Integration tests need a GPU or software fallback:
+
+- **OpenGL:** `LIBGL_ALWAYS_SOFTWARE=1` + `MESA_GL_VERSION_OVERRIDE=4.1` + `xvfb-run -a`
+- **DX11 / DX12:** WARP (built into Windows — no setup required)
+
+---
+
+## CI
+
+GitHub Actions on every push to `main` and `dev`:
+
+- **Unit tests** — Linux + Windows, Debug + Release
+- **Integration tests** — OpenGL via Mesa llvmpipe, DX11 via WARP, DX12 via WARP
+- **All-pass gate** — merge blocked unless every job succeeds
+- Concurrency groups cancel stale in-progress runs on the same PR
+
+---
+
+## Branching Strategy
+
+| Branch | Purpose | Rules |
+|--------|---------|-------|
+| `main` | Stable, always builds, always passes tests | PRs only — no direct pushes. All CI checks must pass before merge. |
+| `dev` | Integration branch for in-progress work | Feature branches merge here first. |
+| `feature/*` | Individual features or bug fixes | Branch off `dev`, merge back into `dev` via PR when complete. |
+
+main  ←──(PR)──  dev  ←──(PR)──  feature/*
+
+Naming convention for feature branches: `feature/area/description` (e.g., `feature/renderer/opengl-backend`, `feature/core/log-system`, `feature/editor/dock-layout`). Commits follow [Conventional Commits](https://www.conventionalcommits.org/) format (`feat`, `fix`, `refactor`, `test`, `docs`, `ci`).
+
+## Conventions
+
+| What | Rule |
+|------|------|
+| Naming | `m_PascalCase` members, `I`-prefix interfaces, `s_PascalCase` statics, `DC_` macros |
+| Error handling | `Result<T,E>` + `[[nodiscard]]` on every fallible function |
+| Tests | Catch2, `test_snake_case.cpp`, Arrange-Act-Assert |
+| Shaders | `.dcshader` (raster), `.dccompute` (compute). GLSL source → SPIR-V → cross-compile |
+| Metal files | No `namespace DC` in `.mm` files. Metal 4 uses dual guards (compile-time + runtime) |
+| Warnings | `/W4 /WX` (MSVC), `-Wall -Wextra -Werror` (GCC/Clang). Per-target, no globals. |
+
+---
+
+## Dependencies
+
+All fetched automatically via CMake `FetchContent`. No manual downloads.
+
+| Dependency | Purpose |
+|------------|---------|
+| [GLFW](https://github.com/glfw/glfw) | Window creation + input |
+| [GLM](https://github.com/g-truc/glm) | Math (column-major matrices, quaternions) |
+| [Dear ImGui](https://github.com/ocornut/imgui) (docking branch) | Editor UI |
+| [Catch2 v3](https://github.com/catchorg/Catch2) | Testing |
+| [spdlog](https://github.com/gabime/spdlog) | Logging |
+| [Assimp](https://github.com/assimp/assimp) | Asset import (glTF, FBX) |
+| [stb](https://github.com/nothings/stb) | Image loading (stb_image) |
+| [glslang](https://github.com/KhronosGroup/glslang) | GLSL/HLSL → SPIR-V |
+| [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross) | SPIR-V → GLSL/HLSL/MSL |
+| [VMA](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator) | Vulkan memory allocation |
+| [D3D12MA](https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator) | DX12 memory allocation |
+
+**Platform SDKs (not fetched):** Vulkan SDK (LunarG), Windows SDK (for DX11/DX12), Xcode + Metal SDK (macOS).
+
+---
+
 ## Phase 1 Roadmap
 
 Phase 1 builds the engine from an empty skeleton to a full five-backend renderer with scene graph, shader pipeline, compute shaders, and an editor shell. Target: **273 tests**.
@@ -78,8 +175,8 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | Deliverable | Status |
 |-------------|--------|
 | Directory structure, root `CMakeLists.txt`, `CMakePresets.json` | ✅ |
-| All five backend targets compile with empty `Init()` stubs | ⬜ |
-| GLFW window creation on all three platforms | ⬜ |
+| All five backend targets compile with empty `Init()` stubs | ✅ |
+| GLFW window creation on all three platforms | ✅ |
 
 ### Engine Core
 
@@ -317,91 +414,6 @@ DarkChocolate/
         ├── dx12/
         └── vulkan/
 ```
-
----
-
-## Dependencies
-
-All fetched automatically via CMake `FetchContent`. No manual downloads.
-
-| Dependency | Purpose |
-|------------|---------|
-| [GLFW](https://github.com/glfw/glfw) | Window creation + input |
-| [GLM](https://github.com/g-truc/glm) | Math (column-major matrices, quaternions) |
-| [Dear ImGui](https://github.com/ocornut/imgui) (docking branch) | Editor UI |
-| [Catch2 v3](https://github.com/catchorg/Catch2) | Testing |
-| [spdlog](https://github.com/gabime/spdlog) | Logging |
-| [Assimp](https://github.com/assimp/assimp) | Asset import (glTF, FBX) |
-| [stb](https://github.com/nothings/stb) | Image loading (stb_image) |
-| [glslang](https://github.com/KhronosGroup/glslang) | GLSL/HLSL → SPIR-V |
-| [SPIRV-Cross](https://github.com/KhronosGroup/SPIRV-Cross) | SPIR-V → GLSL/HLSL/MSL |
-| [VMA](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator) | Vulkan memory allocation |
-| [D3D12MA](https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator) | DX12 memory allocation |
-
-**Platform SDKs (not fetched):** Vulkan SDK (LunarG), Windows SDK (for DX11/DX12), Xcode + Metal SDK (macOS).
-
----
-
-## Building
-
-### Prerequisites
-
-- **CMake 4.2+** (Ninja required on Linux; Windows and macOS use IDE generators)
-- **C++20 compiler:** MSVC 2026+ (Visual Studio 18), Clang 15+, or GCC 13+
-- **Platform SDK** for your target backend(s)
-
-### Quick Start
-
-```bash
-git clone <repo-url>
-cd dark-chocolate
-
-# Pick your preset
-cmake --preset windows-vs         # Windows (Visual Studio 18 2026, x64)
-cmake --preset macos-debug        # macOS (Xcode)
-cmake --preset linux-ci           # Linux (Ninja, Release)
-
-cmake --build --preset windows-debug    # Debug build
-cmake --build --preset windows-release  # Release build
-cmake --build --preset macos-debug
-cmake --build --preset linux-ci
-```
-
-### Running Tests
-
-```bash
-cd build/<preset>
-ctest -C Debug --output-on-failure     # or -C Release
-```
-
-Integration tests need a GPU or software fallback:
-
-- **OpenGL:** `LIBGL_ALWAYS_SOFTWARE=1` + `MESA_GL_VERSION_OVERRIDE=4.1` + `xvfb-run -a`
-- **DX11 / DX12:** WARP (built into Windows — no setup required)
-
----
-
-## CI
-
-GitHub Actions on every push to `main` and `develop`:
-
-- **Unit tests** — Linux + Windows, Debug + Release
-- **Integration tests** — OpenGL via Mesa llvmpipe, DX11 via WARP, DX12 via WARP
-- **All-pass gate** — merge blocked unless every job succeeds
-- Concurrency groups cancel stale in-progress runs on the same PR
-
----
-
-## Conventions
-
-| What | Rule |
-|------|------|
-| Naming | `m_PascalCase` members, `I`-prefix interfaces, `s_PascalCase` statics, `DC_` macros |
-| Error handling | `Result<T,E>` + `[[nodiscard]]` on every fallible function |
-| Tests | Catch2, `test_snake_case.cpp`, Arrange-Act-Assert |
-| Shaders | `.dcshader` (raster), `.dccompute` (compute). GLSL source → SPIR-V → cross-compile |
-| Metal files | No `namespace DC` in `.mm` files. Metal 4 uses dual guards (compile-time + runtime) |
-| Warnings | `/W4 /WX` (MSVC), `-Wall -Wextra -Werror` (GCC/Clang). Per-target, no globals. |
 
 ---
 
