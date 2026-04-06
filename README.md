@@ -175,8 +175,8 @@ Phase 1 builds the engine from an empty skeleton to a full five-backend renderer
 | Deliverable | Status |
 |-------------|--------|
 | Directory structure, root `CMakeLists.txt`, `CMakePresets.json` | ✅ |
-| All five backend targets compile with empty `Init()` stubs | ⬜ |
-| GLFW window creation on all three platforms | ⬜ |
+| All five backend targets compile with empty `Init()` stubs | ✅ |
+| GLFW window creation on all three platforms | ✅ |
 
 ### Engine Core
 
