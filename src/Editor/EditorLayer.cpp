@@ -95,6 +95,26 @@ namespace DC
 			ImGui::PopStyleVar();
 			ImGuiID dockId = ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0),
 				ImGuiDockNodeFlags_PassthruCentralNode);
+
+			// One-time layout init
+			if (!m_LayoutInitialized)
+			{
+				m_LayoutInitialized = true;
+				ImGui::DockBuilderRemoveNode(dockId);
+				ImGui::DockBuilderAddNode(dockId, ImGuiDockNodeFlags_DockSpace);
+				ImGui::DockBuilderSetNodeSize(dockId, ImGui::GetMainViewport()->WorkSize);
+
+				ImGuiID dockLeft, dockRight, dockCenter;
+				ImGui::DockBuilderSplitNode(dockId, ImGuiDir_Left, 0.20f, &dockLeft, &dockCenter);
+				ImGui::DockBuilderSplitNode(dockCenter, ImGuiDir_Right, 0.25f, &dockRight, &dockCenter);
+
+				ImGui::DockBuilderDockWindow("Scene Hierarchy", dockLeft);
+				ImGui::DockBuilderDockWindow("Properties", dockRight);
+				ImGui::DockBuilderDockWindow("Viewport", dockCenter);
+
+				ImGui::DockBuilderFinish(dockId);
+			}
+
 			DrawMenuBar();
 			ImGui::End();
 		}

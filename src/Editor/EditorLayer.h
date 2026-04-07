@@ -39,5 +39,6 @@ namespace DC
 		EditorMode m_Mode					= EditorMode::Edit;
 		bool m_ShowDemoWindow				= false;
 		float m_DeltaTime					= 0.0f;
+		bool m_LayoutInitialized			= false;
 	};
 }
