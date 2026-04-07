@@ -93,16 +93,20 @@ namespace DC
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 			ImGui::Begin("DockSpace", nullptr, flags);
 			ImGui::PopStyleVar();
-			ImGuiID dockId = ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0),
-				ImGuiDockNodeFlags_PassthruCentralNode);
+
+			ImVec2 dockspaceSize = ImGui::GetContentRegionAvail(); // actual usable area
+
+			ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+
+			ImGuiID dockId = ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0), dockspaceFlags);
 
 			// One-time layout init
 			if (!m_LayoutInitialized)
 			{
 				m_LayoutInitialized = true;
 				ImGui::DockBuilderRemoveNode(dockId);
-				ImGui::DockBuilderAddNode(dockId, ImGuiDockNodeFlags_DockSpace);
-				ImGui::DockBuilderSetNodeSize(dockId, ImGui::GetMainViewport()->WorkSize);
+				ImGui::DockBuilderAddNode(dockId, dockspaceFlags | ImGuiDockNodeFlags_DockSpace);
+				ImGui::DockBuilderSetNodeSize(dockId, dockspaceSize);
 
 				ImGuiID dockLeft, dockRight, dockCenter;
 				ImGui::DockBuilderSplitNode(dockId, ImGuiDir_Left, 0.20f, &dockLeft, &dockCenter);
