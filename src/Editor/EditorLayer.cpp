@@ -93,29 +93,29 @@ namespace DC
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 			ImGui::Begin("DockSpace", nullptr, flags);
 			ImGui::PopStyleVar();
-			ImGuiID dockId = ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0),
-				ImGuiDockNodeFlags_PassthruCentralNode);
 
-			// Build default layout once
-			static bool firstTime = true;
-			if (firstTime) {
-				firstTime = false;
+			ImVec2 dockspaceSize = ImGui::GetContentRegionAvail(); // actual usable area
+
+			ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+
+			ImGuiID dockId = ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0), dockspaceFlags);
+
+			// One-time layout init
+			if (!m_LayoutInitialized)
+			{
+				m_LayoutInitialized = true;
 				ImGui::DockBuilderRemoveNode(dockId);
-				ImGui::DockBuilderAddNode(dockId, ImGuiDockNodeFlags_DockSpace);
-				ImGui::DockBuilderSetNodeSize(dockId, ImGui::GetMainViewport()->WorkSize);
+				ImGui::DockBuilderAddNode(dockId, dockspaceFlags | ImGuiDockNodeFlags_DockSpace);
+				ImGui::DockBuilderSetNodeSize(dockId, dockspaceSize);
 
-				ImGuiID left, center;
-				ImGui::DockBuilderSplitNode(dockId, ImGuiDir_Left, 0.2f, &left, &center);
-				ImGuiID right, middle;
-				ImGui::DockBuilderSplitNode(center, ImGuiDir_Right, 0.25f, &right, &middle);
-				ImGuiID bottom, viewport;
-				ImGui::DockBuilderSplitNode(middle, ImGuiDir_Down, 0.25f, &bottom, &viewport);
+				ImGuiID dockLeft, dockRight, dockCenter;
+				ImGui::DockBuilderSplitNode(dockId, ImGuiDir_Left, 0.20f, &dockLeft, &dockCenter);
+				ImGui::DockBuilderSplitNode(dockCenter, ImGuiDir_Right, 0.25f, &dockRight, &dockCenter);
 
-				ImGui::DockBuilderDockWindow("Scene Hierarchy", left);
-				ImGui::DockBuilderDockWindow("Viewport", viewport);
-				ImGui::DockBuilderDockWindow("Properties", right);
-				ImGui::DockBuilderDockWindow("##Stats", bottom);
-				ImGui::DockBuilderDockWindow("##Toolbar", bottom);
+				ImGui::DockBuilderDockWindow("Scene Hierarchy", dockLeft);
+				ImGui::DockBuilderDockWindow("Properties", dockRight);
+				ImGui::DockBuilderDockWindow("Viewport", dockCenter);
+
 				ImGui::DockBuilderFinish(dockId);
 			}
 
