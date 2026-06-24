@@ -12,10 +12,11 @@ namespace DC
 
 		// Non-pure virtuals: override only what is needed
 		// No forced empty boilerplate on layers that don't use all hooks.
-		virtual void OnAttach() {}
-		virtual void OnDetach() {}
-		virtual void OnUpdate(float) {}
-		virtual void OnImGuiRender() {}
+		virtual void OnAttach()			{}
+		virtual void OnDetach()			{}
+		virtual void OnUpdate(float)	{}
+		virtual void OnRender()			{}
+		virtual void OnImGuiRender()	{}
 
 		const std::string& GetName() const { return m_DebugName; }
 

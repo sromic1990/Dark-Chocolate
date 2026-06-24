@@ -33,10 +33,10 @@ TEST_CASE("Triangle vertices are in NDC", "[vertex]")
 {
 	for (const auto& v : DC::k_TriangleVertices)
 	{
-		REQUIRE(v.Postion.x >= -1.0f);
-		REQUIRE(v.Postion.x <= 1.0f);
-		REQUIRE(v.Postion.y >= -1.0f);
-		REQUIRE(v.Postion.y <= 1.0f);
+		REQUIRE(v.Position.x >= -1.0f);
+		REQUIRE(v.Position.x <= 1.0f);
+		REQUIRE(v.Position.y >= -1.0f);
+		REQUIRE(v.Position.y <= 1.0f);
 	}
 }
 

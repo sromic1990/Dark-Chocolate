@@ -1,5 +1,9 @@
 // src/Core/Application.cpp
 #include "Core/Application.h"
+
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 #include "Core/Log.h"
 #include <GLFW/glfw3.h>
 #include <stdexcept>
@@ -70,7 +74,17 @@ namespace DC
 			if (!m_Minimized)
 			{
 				RenderCommand::BeginFrame({ 0.1f, 0.1f, 0.15f, 1.0f });
+				m_LayerStack.RenderAll();
+
+				// ImGui frame starts here, before any layer gets OnImGuiRender
+				ImGui_ImplOpenGL3_NewFrame();
+				ImGui_ImplGlfw_NewFrame();
+				ImGui::NewFrame();
+
 				m_LayerStack.RenderImGuiAll();
+				ImGui::Render();
+				ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 				RenderCommand::EndFrame();
 				RenderCommand::Present(m_Spec.VSync);
 			}

@@ -50,4 +50,12 @@ namespace DC
 			layer->OnImGuiRender();
 		}
 	}
+
+	void LayerStack::RenderAll()
+	{
+		for (auto& layer : m_Layers)
+		{
+			layer->OnRender();
+		}
+	}
 }

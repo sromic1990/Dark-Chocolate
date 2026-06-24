@@ -87,7 +87,7 @@ namespace DC
 	void Window::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		//glfwSwapBuffers(m_Window);
 	}
 
 	bool Window::ShouldClose() const

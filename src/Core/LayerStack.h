@@ -22,6 +22,7 @@ namespace DC
 		std::unique_ptr<Layer> PopLayer(Layer* layer);
 		void Clear();
 		void UpdateAll(float delta);
+		void RenderAll();
 		void RenderImGuiAll();
 
 		auto begin() { return m_Layers.begin(); }

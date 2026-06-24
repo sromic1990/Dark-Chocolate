@@ -47,6 +47,11 @@ namespace DC
 		{
 			return s_Backend ? s_Backend->GetName() : "None";
 		}
+
+		static IRenderBackend* GetRawBackend()
+		{
+			return s_Backend;
+		}
 	
 	private:
 		static IRenderBackend* s_Backend;

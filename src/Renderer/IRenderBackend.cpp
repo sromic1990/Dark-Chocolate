@@ -3,7 +3,7 @@
 #include "Core/Log.h"
 
 // Uncomment as each backend is implemented
-// #include "renderer/Backends/OpenGL/OpenGLBackend.h"
+ #include "renderer/Backends/OpenGL/OpenGLBackend.h"
 // #ifdef DC_PLATFORM_WINDOWS
 // #include "renderer/Backends/DX11/DX11Backend.h"
 // #include "renderer/Backends/DX12/DX12Backend.h"
@@ -50,8 +50,8 @@ namespace DC
 			return nullptr;
 #endif
 		case BackendType::OpenGL:
-			DC_CORE_WARN("OpenGL backend not yet implemented.");
-			return nullptr;
+			DC_CORE_INFO("Creating OpenGL 4.1 backend.");
+			return std::make_unique<OpenGLBackend>();
 		default:
 			DC_CORE_ERROR("Unknown backend type");
 			return nullptr;

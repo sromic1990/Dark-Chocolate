@@ -11,4 +11,4 @@ target_link_libraries(DarkChocolateIntegrationTests PRIVATE
     OpenGL::GL)
 
 # 60-second timeout: context can be slow under Mesa
-catc_discover_tests(DarkChocolateIntegrationTests PROPERTIES TIMEOUT 60)
+catch_discover_tests(DarkChocolateIntegrationTests PROPERTIES TIMEOUT 60)

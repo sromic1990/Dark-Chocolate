@@ -71,11 +71,6 @@ namespace DC
 
 	void EditorLayer::OnImGuiRender()
 	{
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-
 		// Full-screen DockSpace: the invisible table the editor layout sits on.
 		// Without it, ImGuiConfigFlags_DockingEnable has no visible effect.
 		{
@@ -90,11 +85,14 @@ namespace DC
 			ImGui::SetNextWindowPos(ImVec2(vp->WorkPos.x, vp->WorkPos.y + toolbarHeight));
 			ImGui::SetNextWindowSize(ImVec2(vp->WorkSize.x, vp->WorkSize.y - toolbarHeight));
 			ImGui::SetNextWindowViewport(vp->ID);
+
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 			ImGui::Begin("DockSpace", nullptr, flags);
 			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
 
-			ImVec2 dockspaceSize = ImGui::GetContentRegionAvail(); // actual usable area
+			ImVec2 dockspaceSize = ImGui::GetContentRegionAvail();
 
 			ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -122,25 +120,12 @@ namespace DC
 			DrawMenuBar();
 			ImGui::End();
 		}
-		DrawToolbar(); DrawSceneHierarchy(); DrawProperties();
-		DrawViewport(); DrawStatsOverlay();
+		DrawToolbar(); 
+		DrawSceneHierarchy(); 
+		DrawProperties();
+		DrawViewport(); 
+		DrawStatsOverlay();
 		if (m_ShowDemoWindow) ImGui::ShowDemoWindow(&m_ShowDemoWindow);
-
-
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-
-		// Multi-viewport: save/restore GL context around platform window render.
-		/*if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) 
-		{
-			GLFWwindow* backup = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup);
-		}*/
-
-
 	}
 
 	void EditorLayer::DrawMenuBar()
@@ -257,15 +242,15 @@ namespace DC
 	void EditorLayer::DrawViewport()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-		ImGui::Begin("Viewport");
+		ImGui::SetNextWindowBgAlpha(0.0f);  // ← let the triangle show through
+		ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_NoBackground);
 		ImGui::PopStyleVar();
-		ImGui::Text("GPU viewport renders here later.");
-		ImGui::TextDisabled("Backend: %s", RenderCommand::GetBackendName().c_str());
+
+		// Keep play mode indicator if you want, it'll float over the triangle
 		if (m_Mode == EditorMode::Play)
 			ImGui::TextColored(ImVec4(0.2f, 0.9f, 0.2f, 1.0f), " PLAY MODE ");
+
 		ImGui::End();
-
-
 	}
 
 	void EditorLayer::DrawStatsOverlay()
